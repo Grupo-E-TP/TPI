@@ -5,6 +5,10 @@
 #include <cmath>
 #include <algorithm>
 
+// Nuevas
+#include <string>
+#include <iostream>
+
 using namespace std;
 
 // DEFINICIONES DE TIPO
