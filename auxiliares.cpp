@@ -59,21 +59,29 @@ void tableroLindo(const posicion &p)
                 case REY:
                     pieza = 'k';
             }
+
+            // Si encuentra una pieza, agrega las casillas vacías previas si las hubiera
             if(pieza != '\0' && casillasVacias != 0)
             {
                 fila += to_string(casillasVacias);
                 casillasVacias = 0;
             }
+
+            // Si es una pieza blanca, convierte pieza a mayúsculas
             if(!bool(c.second - 1))
             {
                 pieza = char(toupper(pieza));
             }
+
+            // Si encuentra una pieza, la agrega a la fila
             if(pieza != '\0')
             {
                 fila += pieza;
             }
             pieza = 0;
         }
+
+        // Agrega la fila al tablero FEN
         tableroFEN += !fila.empty() ? fila + "/" : "8/";
         fila = "";
         casillasVacias = 0;
