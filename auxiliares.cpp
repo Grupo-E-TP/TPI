@@ -27,3 +27,56 @@ tablero inicializarTablero(){
     tablero out(ANCHO_TABLERO, fila);
     return out;
 }
+
+// Nuevas
+void tableroLindo(const posicion &p)
+{
+    tablero tab = p.first;
+    string tableroFEN, fila;
+    int casillasVacias = 0;
+    char pieza;
+    for(int i = 0; i < tab.size(); ++i)
+    {
+        for(int j = 0; j < tab[0].size(); ++j)
+        {
+            casilla c = tab[i][j];
+
+            // Identifica la pieza
+            switch(c.first)
+            {
+                case VACIO:
+                    casillasVacias++;
+                    break;
+                case PEON:
+                    pieza = 'p';
+                    break;
+                case ALFIL:
+                    pieza = 'b';
+                    break;
+                case TORRE:
+                    pieza = 'r';
+                    break;
+                case REY:
+                    pieza = 'k';
+            }
+            if(pieza != '\0' && casillasVacias != 0)
+            {
+                fila += to_string(casillasVacias);
+                casillasVacias = 0;
+            }
+            if(!bool(c.second - 1))
+            {
+                pieza = char(toupper(pieza));
+            }
+            if(pieza != '\0')
+            {
+                fila += pieza;
+            }
+            pieza = 0;
+        }
+        tableroFEN += !fila.empty() ? fila + "/" : "8/";
+        fila = "";
+        casillasVacias = 0;
+    }
+    cout << "https://lichess.org/editor/" + tableroFEN << endl;
+}
