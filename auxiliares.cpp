@@ -88,3 +88,55 @@ void tableroLindo(const posicion &p)
     }
     cout << "https://lichess.org/editor/" + tableroFEN << endl;
 }
+
+void tableroFeo(string tableroFEN)
+{
+    char proximaCasilla;
+    char casillaFEN;
+    cout << "tablero t = {" << endl << "\t{";
+    for(int i = 0; i < tableroFEN.size(); ++i)
+    {
+        casillaFEN = tolower(tableroFEN[i]);
+        string casillaTPI;
+        switch(casillaFEN)
+        {
+            case 'p':
+                cout << "cPEON_";
+                break;
+            case 'b':
+                cout << "cALFIL_";
+                break;
+            case 'r':
+                cout << "cTORRE_";
+                break;
+            case 'k':
+                cout << "cREY_";
+                break;
+            default:
+                for(int j = 0; j < int(casillaFEN) - 48; ++j)
+                {
+                    cout << "cVACIA";
+                    cout << (j != int(casillaFEN) - 49 ? "," : "");
+                }
+        }
+        if(isalpha(casillaFEN))
+        {
+            cout << (casillaFEN == tableroFEN[i]? "N" : "B");
+        }
+        proximaCasilla = tableroFEN[i + 1];
+        if(proximaCasilla == '/')
+        {
+            i++;
+            cout << "},\n\t{";
+        }
+        else if(proximaCasilla == ' ')
+        {
+            cout << "},\n};\n";
+            break;
+        }
+        else
+        {
+            cout << ",";
+        }
+    }
+}
