@@ -1,0 +1,8 @@
+<<<<<<< Updated upstream
+.idea
+cmake-build-debug
+=======
+cmake-build-debug
+.idea
+>>>>>>> Stashed changes
+ajedrezLite.exe
