@@ -59,24 +59,87 @@ void tableroLindo(const posicion &p)
                 case REY:
                     pieza = 'k';
             }
+
+            // Si encuentra una pieza, agrega las casillas vacías previas si las hubiera
             if(pieza != '\0' && casillasVacias != 0)
             {
                 fila += to_string(casillasVacias);
                 casillasVacias = 0;
             }
+
+            // Si es una pieza blanca, convierte pieza a mayúsculas
             if(!bool(c.second - 1))
             {
                 pieza = char(toupper(pieza));
             }
+
+            // Si encuentra una pieza, la agrega a la fila
             if(pieza != '\0')
             {
                 fila += pieza;
             }
             pieza = 0;
         }
+
+        // Agrega la fila al tablero FEN
         tableroFEN += !fila.empty() ? fila + "/" : "8/";
         fila = "";
         casillasVacias = 0;
     }
     cout << "https://lichess.org/editor/" + tableroFEN << endl;
+}
+
+void tableroFeo(string tableroFEN)
+{
+    char proximaCasilla;
+    char casillaFEN;
+    int casillasLlenas = 0;
+    cout << "tablero t = {" << endl << "\t{";
+    for(int i = 0; casillasLlenas < 64; ++i)
+    {
+        casillaFEN = tolower(tableroFEN[i]);
+        string casillaTPI;
+        switch(casillaFEN)
+        {
+            case 'p':
+                cout << "cPEON_";
+                casillasLlenas++;
+                break;
+            case 'b':
+                cout << "cALFIL_";
+                casillasLlenas++;
+                break;
+            case 'r':
+                cout << "cTORRE_";
+                casillasLlenas++;
+                break;
+            case 'k':
+                cout << "cREY_";
+                casillasLlenas++;
+                break;
+            default:
+                casillasLlenas += int(casillaFEN) - 48;
+                for(int j = 0; j < int(casillaFEN) - 48; ++j)
+                {
+                    cout << "cVACIA";
+                    cout << (j != int(casillaFEN) - 49 ? "," : "");
+                }
+        }
+        if(isalpha(casillaFEN))
+        {
+            cout << (casillaFEN == tableroFEN[i]? "N" : "B");
+        }
+
+        proximaCasilla = tableroFEN[i + 1];
+        if(proximaCasilla == '/')
+        {
+            i++;
+            cout << "},\n\t{";
+        }
+        else if(casillasLlenas < 64)
+        {
+            cout << ",";
+        }
+    }
+    cout << "},\n};\n";
 }
