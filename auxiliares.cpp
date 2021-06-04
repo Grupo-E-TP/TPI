@@ -93,8 +93,9 @@ void tableroFeo(string tableroFEN)
 {
     char proximaCasilla;
     char casillaFEN;
+    int casillasLlenas = 0;
     cout << "tablero t = {" << endl << "\t{";
-    for(int i = 0; i < tableroFEN.size(); ++i)
+    for(int i = 0; casillasLlenas < 64; ++i)
     {
         casillaFEN = tolower(tableroFEN[i]);
         string casillaTPI;
@@ -102,17 +103,22 @@ void tableroFeo(string tableroFEN)
         {
             case 'p':
                 cout << "cPEON_";
+                casillasLlenas++;
                 break;
             case 'b':
                 cout << "cALFIL_";
+                casillasLlenas++;
                 break;
             case 'r':
                 cout << "cTORRE_";
+                casillasLlenas++;
                 break;
             case 'k':
                 cout << "cREY_";
+                casillasLlenas++;
                 break;
             default:
+                casillasLlenas += int(casillaFEN) - 48;
                 for(int j = 0; j < int(casillaFEN) - 48; ++j)
                 {
                     cout << "cVACIA";
@@ -123,20 +129,17 @@ void tableroFeo(string tableroFEN)
         {
             cout << (casillaFEN == tableroFEN[i]? "N" : "B");
         }
+
         proximaCasilla = tableroFEN[i + 1];
         if(proximaCasilla == '/')
         {
             i++;
             cout << "},\n\t{";
         }
-        else if(proximaCasilla == ' ')
-        {
-            cout << "},\n};\n";
-            break;
-        }
-        else
+        else if(casillasLlenas < 64)
         {
             cout << ",";
         }
     }
+    cout << "},\n};\n";
 }
