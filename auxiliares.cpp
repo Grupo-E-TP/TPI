@@ -28,7 +28,7 @@ tablero inicializarTablero(){
     return out;
 }
 
-// Nuevas
+// Hay que ingresar una posicion valida.
 void tableroLindo(const posicion &p)
 {
     tablero tab = p.first;
