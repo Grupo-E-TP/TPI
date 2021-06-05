@@ -1,28 +1,33 @@
-#include "definiciones.h"
 #include "auxiliares.h"
+#include "definiciones.h"
 
 using namespace std;
 // aqui se pueden ubicar todas las funciones auxiliares de soporte para la resolucion de los ejercicios
-pair<int,int> mp(int a, int b) {
+pair<int, int> mp(int a, int b)
+{
     return make_pair(a, b);
 }
 
 // TEST
-vector<pair<int,int>> ordenarVectorPares(vector<pair<int,int>> &v) {
+vector<pair<int, int>> ordenarVectorPares(vector<pair<int, int>> &v)
+{
     sort(v.begin(), v.end());
-//    v.erase(unique(v.begin(), v.end()), v.end());
+    // v.erase(unique(v.begin(), v.end()), v.end());
     return v;
 }
 
-coordenada setCoord(int i, int j) {
-    return make_pair(i,j);
+coordenada setCoord(int i, int j)
+{
+    return make_pair(i, j);
 }
 
-tablero tableroActual ( posicion const &p ) {
+tablero tableroActual(posicion const &p)
+{
     return p.first;
 }
 
-tablero inicializarTablero(){
+tablero inicializarTablero()
+{
     vector<casilla> fila(ANCHO_TABLERO, cVACIA);
     tablero out(ANCHO_TABLERO, fila);
     return out;
@@ -59,21 +64,29 @@ void tableroLindo(const posicion &p)
                 case REY:
                     pieza = 'k';
             }
+
+            // Si encuentra una pieza, agrega las casillas vacías previas si las hubiera
             if(pieza != '\0' && casillasVacias != 0)
             {
                 fila += to_string(casillasVacias);
                 casillasVacias = 0;
             }
+
+            // Si es una pieza blanca, convierte pieza a mayúsculas
             if(!bool(c.second - 1))
             {
                 pieza = char(toupper(pieza));
             }
+
+            // Si encuentra una pieza, la agrega a la fila
             if(pieza != '\0')
             {
                 fila += pieza;
             }
             pieza = 0;
         }
+
+        // Agrega la fila al tablero FEN
         tableroFEN += !fila.empty() ? fila + "/" : "8/";
         fila = "";
         casillasVacias = 0;
@@ -81,137 +94,133 @@ void tableroLindo(const posicion &p)
     cout << "https://lichess.org/editor/" + tableroFEN << endl;
 }
 
-int aparicionesEnTablero(tablero const& t, casilla const& c)
+void tableroFeo(string tableroFEN)
 {
-    int res = 0;
-    for (int i = 0; i < t.size(); ++i)
+    char proximaCasilla;
+    char casillaFEN;
+    int casillasLlenas = 0;
+    cout << "tablero t = {" << endl
+         << "\t{";
+    for(int i = 0; casillasLlenas < 64; ++i)
     {
-        for (int j = 0; j < t[0].size() ; ++j)
+        casillaFEN = tolower(tableroFEN[i]);
+        string casillaTPI;
+        switch(casillaFEN)
         {
-           if (t[i][j]==c)
-           {
-               res = res + 1;
-           }
+            case 'p':
+                cout << "cPEON_";
+                casillasLlenas++;
+                break;
+            case 'b':
+                cout << "cALFIL_";
+                casillasLlenas++;
+                break;
+            case 'r':
+                cout << "cTORRE_";
+                casillasLlenas++;
+                break;
+            case 'k':
+                cout << "cREY_";
+                casillasLlenas++;
+                break;
+            default:
+                casillasLlenas += int(casillaFEN) - 48;
+                for(int j = 0; j < int(casillaFEN) - 48; ++j)
+                {
+                    cout << "cVACIA";
+                    cout << (j != int(casillaFEN) - 49 ? "," : "");
+                }
+        }
+        if(isalpha(casillaFEN))
+        {
+            cout << (casillaFEN == tableroFEN[i] ? "N" : "B");
+        }
+
+        proximaCasilla = tableroFEN[i + 1];
+        if(proximaCasilla == '/')
+        {
+            i++;
+            cout << "},\n\t{";
+        } else if(casillasLlenas < 64)
+        {
+            cout << ",";
+        }
+    }
+    cout << "},\n};\n";
+}
+
+bool esTableroValido(const tablero &t)
+{
+    return esMatriz(t) && casillasValidas(t) && sinPeonesNoCoronados(t) && cantidadValidaDePiezas(t);
+}
+
+bool esMatriz(tablero t)
+{
+    bool res = t.size() == ANCHO_TABLERO;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        res &= t[i].size() == ANCHO_TABLERO;
+    }
+    return res;
+}
+
+bool casillasValidas(tablero t)
+{
+    bool res = true;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            casilla c = t[i][j];
+            int c0 = c.first, c1 = c.second;
+            res &= (c == cVACIA || (PEON <= c0 && c0 <= REY && BLANCO <= c1 && c1 <= NEGRO));
         }
     }
     return res;
 }
 
-int jugador(posicion const& p)
-{
-    return p.second;
-}
-
-
-
-casilla setCasilla(int i, int j)
-{
-    return make_pair(i,j);
-}
-
-bool esJugadorValido(int const j)
-{
-    return j== BLANCO || j==NEGRO;
-}
-
-bool esMatriz(tablero const& t)
+bool sinPeonesNoCoronados(tablero t)
 {
     bool res = true;
-    res = (t.size()==ANCHO_TABLERO)&&res;
-    for (int f = 0; f < t.size(); ++f)
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
     {
-        res = (t[f].size()==ANCHO_TABLERO)&&res;
+        int pieza1 = t[0][i].first;
+        int pieza2 = t[i][0].first;
+        res &= pieza1 != PEON && pieza2 != PEON;
     }
     return res;
 }
 
-bool casillaVacia(tablero const& t, coordenada const c)
+bool cantidadValidaDePiezas(const tablero &t)
 {
-    return (t[c.first][c.second].first == VACIO)&&(t[c.first][c.second].second == VACIO);
+    // Peones
+    bool res = aparicionesEnTablero(t, cPEON_B) <= ANCHO_TABLERO;
+    res &= aparicionesEnTablero(t, cPEON_N) <= ANCHO_TABLERO;
+
+    // Alfiles
+    res &= aparicionesEnTablero(t, cALFIL_B) <= 2;
+    res &= aparicionesEnTablero(t, cALFIL_N) <= 2;
+
+    // Torres
+    res &= aparicionesEnTablero(t, cPEON_B) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_B) <= ANCHO_TABLERO);
+    res &= aparicionesEnTablero(t, cPEON_N) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_N) <= ANCHO_TABLERO);
+
+    // Reyes
+    res &= aparicionesEnTablero(t, cREY_B) == 1;
+    res &= aparicionesEnTablero(t, cREY_N) == 1;
+
+    return res;
 }
 
-bool coordenadaEnRango(coordenada const c)
+int aparicionesEnTablero(tablero t, casilla p)
 {
-    return ((0<=c.first)&&(c.first<ANCHO_TABLERO))&&((0<=c.second)&&(c.second<ANCHO_TABLERO));
-}
-
-int pieza(tablero const& t, coordenada const c)
-{
-    return t[c.first][c.second].first;
-}
-
-int color(tablero const& t, coordenada const c)
-{
-    return t[c.first][c.second].second;
-}
-
-bool casillasValidas(tablero const& t)
-{
-    bool res = true;
-    for (int i = 0; i < ANCHO_TABLERO; ++i)
+    int apariciones = 0;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
     {
-        for (int j = 0; j < ANCHO_TABLERO; ++j)
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
         {
-            casilla c = setCasilla(i,j);
-            res = res && (casillaVacia(t,c)||((PEON<=pieza(t,c)&& pieza(t,c)<=REY)&&(BLANCO<= color(t,c)&& color(t,c)<=NEGRO)));
+            apariciones += t[i][j] == p ? 1 : 0;
         }
     }
-    return res;
-}
-
-bool sinPeonesNoCoronados(tablero const& t)
-{
-    bool res = true;
-    for (int i = 0; i <ANCHO_TABLERO ; ++i)
-    {
-        casilla c = setCoord(0,i);
-        res = res && (pieza(t,c)!=PEON);
-        c = setCoord(ANCHO_TABLERO-1,i);
-        res = res && (pieza(t,c)!=PEON);
-    }
-    return res;
-}
-
-bool piezasAlfilesValidas(tablero const& t)
-{
-    return (aparicionesEnTablero(t, setCasilla(ALFIL,BLANCO))<=2)&&(aparicionesEnTablero(t, setCasilla(ALFIL,NEGRO))<=2);
-}
-
-bool piezasPeonesValidas(tablero const& t)
-{
-    return (aparicionesEnTablero(t, setCasilla(PEON,BLANCO))<=ANCHO_TABLERO)&&(aparicionesEnTablero(t, setCasilla(PEON,NEGRO))<=ANCHO_TABLERO);
-}
-
-bool piezasReyesValidas(tablero const& t)
-{
-    return (aparicionesEnTablero(t, setCasilla(REY,BLANCO))==1)&&(aparicionesEnTablero(t, setCasilla(REY,NEGRO))==1);
-}
-
-bool piezasTorresValidas(tablero const& t)
-{
-    bool tB;
-    tB = aparicionesEnTablero(t, setCasilla(TORRE,BLANCO))<= (2+ANCHO_TABLERO - aparicionesEnTablero(t,setCasilla(PEON,BLANCO)));
-    bool tN;
-    tN = aparicionesEnTablero(t, setCasilla(TORRE,NEGRO))<= (2+ANCHO_TABLERO - aparicionesEnTablero(t,setCasilla(PEON,NEGRO)));
-    return tB && tN;
-}
-
-bool cantidadValidaDePiezas(tablero const& t)
-{
-    return (piezasTorresValidas(t)&& piezasPeonesValidas(t))&& (piezasAlfilesValidas(t)&& piezasReyesValidas(t));
-}
-
-bool esTableroValido(tablero const& t)
-{
-    bool res = false;
-    if (esMatriz(t))
-    {
-        res = casillasValidas(t)&& sinPeonesNoCoronados(t)&& cantidadValidaDePiezas(t);
-    }
-    return res;
-}
-
-bool esPosicionValida(posicion const& p)
-{
-    return esJugadorValido(jugador(p))&& esTableroValido(tableroActual(p));
+    return apariciones;
 }
