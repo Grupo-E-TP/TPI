@@ -34,7 +34,7 @@ tablero inicializarTablero()
 }
 
 // Nuevas
-void generarTablero(const tablero &tab)
+string generarTableroFEN(const tablero &tab)
 {
     string tableroFEN, fila;
     int casillasVacias = 0;
@@ -65,7 +65,7 @@ void generarTablero(const tablero &tab)
             }
 
             // Si encuentra una pieza, agrega las casillas vacías previas si las hubiera
-            if(pieza != '\0' && casillasVacias != 0)
+            if((pieza != '\0' || j == 7) && casillasVacias != 0)
             {
                 fila += to_string(casillasVacias);
                 casillasVacias = 0;
@@ -90,72 +90,137 @@ void generarTablero(const tablero &tab)
         fila = "";
         casillasVacias = 0;
     }
-    cout << "https://lichess.org/editor/" + tableroFEN << endl;
+    return tableroFEN;
 }
-
-void tableroLindo(const posicion &p)
+tablero generarTableroFeo(string tableroFEN)
 {
-    generarTablero(p.first);
-}
-
-void tableroLindo(const tablero &t)
-{
-    generarTablero(t);
-}
-
-void tableroFeo(string tableroFEN)
-{
-    char proximaCasilla;
     char casillaFEN;
-    int casillasLlenas = 0;
-    cout << "tablero t = {" << endl
-         << "\t{";
+    int casillasLlenas = 0, fila = 0;
+    tablero tabRes(ANCHO_TABLERO);
     for(int i = 0; casillasLlenas < 64; ++i)
     {
-        casillaFEN = tolower(tableroFEN[i]);
-        string casillaTPI;
+        casillaFEN = char(tolower(tableroFEN[i]));
+        int color;
+        casilla c;
+        if(isalpha(casillaFEN))
+        {
+            color = (casillaFEN == tableroFEN[i] ? NEGRO : BLANCO);
+        }
         switch(casillaFEN)
         {
             case 'p':
-                cout << "cPEON_";
+                c = (color == BLANCO ? cPEON_B : cPEON_N);
+                tabRes[fila].push_back(c);
                 casillasLlenas++;
                 break;
             case 'b':
-                cout << "cALFIL_";
+                c = (color == BLANCO ? cALFIL_B : cALFIL_N);
+                tabRes[fila].push_back(c);
                 casillasLlenas++;
                 break;
             case 'r':
-                cout << "cTORRE_";
+                c = (color == BLANCO ? cTORRE_B : cTORRE_N);
+                tabRes[fila].push_back(c);
                 casillasLlenas++;
                 break;
             case 'k':
-                cout << "cREY_";
+                c = (color == BLANCO ? cREY_B : cREY_N);
+                tabRes[fila].push_back(c);
                 casillasLlenas++;
+                break;
+            case '/':
+                fila++;
                 break;
             default:
                 casillasLlenas += int(casillaFEN) - 48;
                 for(int j = 0; j < int(casillaFEN) - 48; ++j)
                 {
-                    cout << "cVACIA";
-                    cout << (j != int(casillaFEN) - 49 ? "," : "");
+                    c = cVACIA;
+                    tabRes[fila].push_back(cVACIA);
                 }
         }
-        if(isalpha(casillaFEN))
-        {
-            cout << (casillaFEN == tableroFEN[i] ? "N" : "B");
-        }
-
-        proximaCasilla = tableroFEN[i + 1];
-        if(proximaCasilla == '/')
-        {
-            i++;
-            cout << "},\n\t{";
-        } else if(casillasLlenas < 64)
-        {
-            cout << ",";
-        }
     }
-    cout << "},\n};\n";
+    return tabRes;
+}
+
+void validarConversion(const tablero &t, string tFEN)
+{
+    tablero tF = generarTableroFeo(tFEN);
+    cout << "CONVERSIÓN ENTRE TABLEROS VÁLIDA: " << (t == tF ? "TRUE" : "FALSE") << endl;
+}
+void validarConversion(string tFEN, const tablero &t)
+{
+    bool iguales = true;
+    int barras = 0;
+    string tab = generarTableroFEN(t);
+    for(int i = 0; i < min(tab.size(), tFEN.size()) && barras < 8; ++i)
+    {
+        iguales &= tab[i] == tFEN[i];
+        barras += tab[i + 1] == '/' || tFEN[i + 1] == '/' ? 1 : 0;
+    }
+    cout << "CONVERSIÓN ENTRE TABLEROS VÁLIDA: " << (iguales ? "TRUE" : "FALSE") << endl;
+}
+
+void mostrarTableroFeo(const tablero &t)
+{
+    cout << "tablero t = {" << endl
+         << "\t{";
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            casilla c = t[i][j];
+            switch(c.first)
+            {
+                case 1:
+                    cout << "cPEON_";
+                    break;
+                case 2:
+                    cout << "cALFIL_";
+                    break;
+                case 3:
+                    cout << "cTORRE_";
+                    break;
+                case 4:
+                    cout << "cREY_";
+                    break;
+                default:
+                    cout << "cVACIA";
+            }
+            if(c.second != 0)
+                cout << (c.second == 1 ? "B" : "N");
+            if(j != 7)
+                cout << ",";
+        }
+        if(i != 7)
+            cout << "},\n\t{";
+        else
+            cout << "},\n};\n";
+    }
+}
+void mostrarTableroFEN(const string &tableroFEN)
+{
+    cout << "https://lichess.org/editor/" + tableroFEN << endl;
+}
+
+void tableroLindo(const posicion &p)
+{
+    string tab = generarTableroFEN(p.first);
+    validarConversion(p.first, tab);
+    mostrarTableroFEN(tab);
+}
+void tableroLindo(const tablero &t)
+{
+    string tab = generarTableroFEN(t);
+    validarConversion(t, tab);
+    mostrarTableroFEN(tab);
+}
+
+void tableroFeo(const string &tableroFEN)
+{
+    tablero tab = generarTableroFeo(tableroFEN);
+    validarConversion(tableroFEN, tab);
+    mostrarTableroFeo(tab);
 }
 
 bool esTableroValido(const tablero &t)

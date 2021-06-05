@@ -19,7 +19,7 @@ tablero tableroActual(posicion const &p);
 // Nuevas
 void tableroLindo(const posicion &p);
 void tableroLindo(const tablero &t);
-void tableroFeo(string tableroFEN);
+void tableroFeo(const string &tableroFEN);
 
 int aparicionesEnTablero(tablero t, casilla p);
 
