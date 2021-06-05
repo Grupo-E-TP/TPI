@@ -34,9 +34,8 @@ tablero inicializarTablero()
 }
 
 // Nuevas
-void tableroLindo(const posicion &p)
+void generarTablero(const tablero &tab)
 {
-    tablero tab = p.first;
     string tableroFEN, fila;
     int casillasVacias = 0;
     char pieza;
@@ -92,6 +91,16 @@ void tableroLindo(const posicion &p)
         casillasVacias = 0;
     }
     cout << "https://lichess.org/editor/" + tableroFEN << endl;
+}
+
+void tableroLindo(const posicion &p)
+{
+    generarTablero(p.first);
+}
+
+void tableroLindo(const tablero &t)
+{
+    generarTablero(t);
 }
 
 void tableroFeo(string tableroFEN)
