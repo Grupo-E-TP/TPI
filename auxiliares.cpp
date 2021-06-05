@@ -172,18 +172,11 @@ bool casillasValidas(tablero t)
         for(int j = 0; j < ANCHO_TABLERO; ++j)
         {
             casilla c = t[i][j];
-            res &= (c == cVACIA || piezaValida(c));
+            int c0 = c.first, c1 = c.second;
+            res &= (c == cVACIA || (PEON <= c0 && c0 <= REY && BLANCO <= c1 && c1 <= NEGRO));
         }
     }
     return res;
-}
-
-// Hay un predicado en el pdf con este nombre, pero no se usa nunca. Creo que se equivocaron y no lo agregaron
-// a esTableroValido. El que no usan es más seguro que este (e igual al nuestro), habría que consultar.
-bool piezaValida(casilla c)
-{
-    int c0 = c.first, c1 = c.second;
-    return PEON <= c0 && c0 <= REY && BLANCO <= c1 && c1 <= NEGRO;
 }
 
 bool sinPeonesNoCoronados(tablero t)

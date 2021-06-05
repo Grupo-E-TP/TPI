@@ -25,7 +25,6 @@ int aparicionesEnTablero(tablero t, casilla p);
 bool esTableroValido(const tablero& t);
 bool esMatriz(tablero t);
 bool casillasValidas(tablero t);
-bool piezaValida(casilla c);
 bool sinPeonesNoCoronados(tablero t);
 bool cantidadValidaDePiezas(const tablero& t);
 int aparicionesEnTablero(tablero t, casilla p);
