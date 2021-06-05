@@ -3,26 +3,31 @@
 
 using namespace std;
 // aqui se pueden ubicar todas las funciones auxiliares de soporte para la resolucion de los ejercicios
-pair<int,int> mp(int a, int b) {
+pair<int, int> mp(int a, int b)
+{
     return make_pair(a, b);
 }
 
 // TEST
-vector<pair<int,int>> ordenarVectorPares(vector<pair<int,int>> &v) {
+vector<pair<int, int>> ordenarVectorPares(vector<pair<int, int>> &v)
+{
     sort(v.begin(), v.end());
-//    v.erase(unique(v.begin(), v.end()), v.end());
+    // v.erase(unique(v.begin(), v.end()), v.end());
     return v;
 }
 
-coordenada setCoord(int i, int j) {
-    return make_pair(i,j);
+coordenada setCoord(int i, int j)
+{
+    return make_pair(i, j);
 }
 
-tablero tableroActual ( posicion const &p ) {
+tablero tableroActual(posicion const &p)
+{
     return p.first;
 }
 
-tablero inicializarTablero(){
+tablero inicializarTablero()
+{
     vector<casilla> fila(ANCHO_TABLERO, cVACIA);
     tablero out(ANCHO_TABLERO, fila);
     return out;
@@ -94,7 +99,8 @@ void tableroFeo(string tableroFEN)
     char proximaCasilla;
     char casillaFEN;
     int casillasLlenas = 0;
-    cout << "tablero t = {" << endl << "\t{";
+    cout << "tablero t = {" << endl
+         << "\t{";
     for(int i = 0; casillasLlenas < 64; ++i)
     {
         casillaFEN = tolower(tableroFEN[i]);
@@ -127,7 +133,7 @@ void tableroFeo(string tableroFEN)
         }
         if(isalpha(casillaFEN))
         {
-            cout << (casillaFEN == tableroFEN[i]? "N" : "B");
+            cout << (casillaFEN == tableroFEN[i] ? "N" : "B");
         }
 
         proximaCasilla = tableroFEN[i + 1];
@@ -135,8 +141,7 @@ void tableroFeo(string tableroFEN)
         {
             i++;
             cout << "},\n\t{";
-        }
-        else if(casillasLlenas < 64)
+        } else if(casillasLlenas < 64)
         {
             cout << ",";
         }
