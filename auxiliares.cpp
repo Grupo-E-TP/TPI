@@ -1,5 +1,5 @@
-#include "definiciones.h"
 #include "auxiliares.h"
+#include "definiciones.h"
 
 using namespace std;
 // aqui se pueden ubicar todas las funciones auxiliares de soporte para la resolucion de los ejercicios
@@ -147,4 +147,87 @@ void tableroFeo(string tableroFEN)
         }
     }
     cout << "},\n};\n";
+}
+
+bool esTableroValido(const tablero &t)
+{
+    return esMatriz(t) && casillasValidas(t) && sinPeonesNoCoronados(t) && cantidadValidaDePiezas(t);
+}
+
+bool esMatriz(tablero t)
+{
+    bool res = t.size() == ANCHO_TABLERO;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        res &= t[i].size() == ANCHO_TABLERO;
+    }
+    return res;
+}
+
+bool casillasValidas(tablero t)
+{
+    bool res = true;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            casilla c = t[i][j];
+            res &= (c == cVACIA || piezaValida(c));
+        }
+    }
+    return res;
+}
+
+// Hay un predicado en el pdf con este nombre, pero no se usa nunca. Creo que se equivocaron y no lo agregaron
+// a esTableroValido. El que no usan es más seguro que este (e igual al nuestro), habría que consultar.
+bool piezaValida(casilla c)
+{
+    int c0 = c.first, c1 = c.second;
+    return PEON <= c0 && c0 <= REY && BLANCO <= c1 && c1 <= NEGRO;
+}
+
+bool sinPeonesNoCoronados(tablero t)
+{
+    bool res = true;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        int pieza1 = t[0][i].first;
+        int pieza2 = t[i][0].first;
+        res &= pieza1 != PEON && pieza2 != PEON;
+    }
+    return res;
+}
+
+bool cantidadValidaDePiezas(const tablero &t)
+{
+    // Peones
+    bool res = aparicionesEnTablero(t, cPEON_B) <= ANCHO_TABLERO;
+    res &= aparicionesEnTablero(t, cPEON_N) <= ANCHO_TABLERO;
+
+    // Alfiles
+    res &= aparicionesEnTablero(t, cALFIL_B) <= 2;
+    res &= aparicionesEnTablero(t, cALFIL_N) <= 2;
+
+    // Torres
+    res &= aparicionesEnTablero(t, cPEON_B) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_B) <= ANCHO_TABLERO);
+    res &= aparicionesEnTablero(t, cPEON_N) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_N) <= ANCHO_TABLERO);
+
+    // Reyes
+    res &= aparicionesEnTablero(t, cREY_B) == 1;
+    res &= aparicionesEnTablero(t, cREY_N) == 1;
+
+    return res;
+}
+
+int aparicionesEnTablero(tablero t, casilla p)
+{
+    int apariciones = 0;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            apariciones += t[i][j] == p ? 1 : 0;
+        }
+    }
+    return apariciones;
 }
