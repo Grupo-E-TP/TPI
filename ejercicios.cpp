@@ -6,8 +6,7 @@
 // EJERCICIO 1
 bool posicionValida(pair<tablero, int> const &p)
 {
-    bool resp = false;
-    resp = (p.second == 1 || p.second == 2) && esTableroValido(p.first);
+    bool resp = (p.second == 1 || p.second == 2) && esTableroValido(p.first);
     return resp;
 }
 
