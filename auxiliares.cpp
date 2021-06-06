@@ -21,6 +21,11 @@ coordenada setCoord(int i, int j)
     return make_pair(i, j);
 }
 
+casilla setCasilla(int i, int j)
+{
+    return make_pair(i, j);
+}
+
 tablero tableroActual(posicion const &p)
 {
     return p.first;
@@ -157,7 +162,7 @@ bool esTableroValido(const tablero &t)
 bool esMatriz(tablero t)
 {
     bool res = t.size() == ANCHO_TABLERO;
-    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    for(int i = 0; i < t.size(); ++i)
     {
         res &= t[i].size() == ANCHO_TABLERO;
     }
@@ -167,9 +172,9 @@ bool esMatriz(tablero t)
 bool casillasValidas(tablero t)
 {
     bool res = true;
-    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    for(int i = 0; i < t.size(); ++i)
     {
-        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        for(int j = 0; j < t.size(); ++j)
         {
             casilla c = t[i][j];
             int c0 = c.first, c1 = c.second;
@@ -185,7 +190,7 @@ bool sinPeonesNoCoronados(tablero t)
     for(int i = 0; i < ANCHO_TABLERO; ++i)
     {
         int pieza1 = t[0][i].first;
-        int pieza2 = t[i][0].first;
+        int pieza2 = t[ANCHO_TABLERO-1][i].first;
         res &= pieza1 != PEON && pieza2 != PEON;
     }
     return res;
@@ -202,8 +207,8 @@ bool cantidadValidaDePiezas(const tablero &t)
     res &= aparicionesEnTablero(t, cALFIL_N) <= 2;
 
     // Torres
-    res &= aparicionesEnTablero(t, cPEON_B) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_B) <= ANCHO_TABLERO);
-    res &= aparicionesEnTablero(t, cPEON_N) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_N) <= ANCHO_TABLERO);
+    res &= aparicionesEnTablero(t, cPEON_B) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_B) );
+    res &= aparicionesEnTablero(t, cPEON_N) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_N) );
 
     // Reyes
     res &= aparicionesEnTablero(t, cREY_B) == 1;
@@ -223,4 +228,124 @@ int aparicionesEnTablero(tablero t, casilla p)
         }
     }
     return apariciones;
+}
+int pieza(tablero const& t, coordenada c)
+{
+    return t[c.first][c.second].first;
+}
+
+int color(tablero const& t, coordenada c)
+{
+    return t[c.first][c.second].second;
+}
+
+bool piezaEnCoordenada(tablero const& t, coordenada c, int pza, int col)
+{
+    return (pieza(t,c) == pza) && (color(t,c) == col);
+}
+
+bool piezasEnCoordenadas(tablero const& t)
+{
+    bool res = true;
+    //PEONES
+    for (int x = 0; x < ANCHO_TABLERO; ++x)
+    {
+        res = res && piezaEnCoordenada(t, setCoord(1,x),PEON,NEGRO);
+        res = res && piezaEnCoordenada(t, setCoord(6,x),PEON,BLANCO);
+    }
+
+    //TORRES
+
+    res = res && piezaEnCoordenada(t, setCoord(0,0),TORRE,NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(0,ANCHO_TABLERO-1),TORRE,NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO-1,0),TORRE,BLANCO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO-1,ANCHO_TABLERO-1),TORRE,BLANCO);
+
+    // ALFILES
+
+    res = res && piezaEnCoordenada(t, setCoord(0,2),ALFIL,NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(0,ANCHO_TABLERO-3),ALFIL,NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO-1,2),ALFIL,BLANCO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO-1,ANCHO_TABLERO-3),ALFIL,BLANCO);
+
+    //REYES
+
+    res = res && piezaEnCoordenada(t, setCoord(0,4),REY,NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO-1,4),REY,BLANCO);
+
+    return res;
+}
+
+bool cantidadPiezasAlInicio(tablero const& t)
+{
+    bool res = true;
+    res = aparicionesEnTablero(t,setCasilla(TORRE,NEGRO)) == 2;
+    res = res && aparicionesEnTablero(t,setCasilla(TORRE,BLANCO)) == 2;
+    res = res && aparicionesEnTablero(t,setCasilla(ALFIL,NEGRO)) == 2;
+    res = res && aparicionesEnTablero(t,setCasilla(ALFIL,BLANCO)) == 2;
+    res = res && aparicionesEnTablero(t,setCasilla(PEON,NEGRO)) == ANCHO_TABLERO;
+    res = res && aparicionesEnTablero(t,setCasilla(PEON,BLANCO)) == ANCHO_TABLERO;
+    return res;
+}
+
+bool casillaVacia(tablero const& t, coordenada c)
+{
+    return cVACIA == t[c.first][c.second];
+}
+
+bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d)
+{
+    bool res;
+    switch (pieza(t,o))
+    {
+        case PEON:
+            res = (d.second == o.second) && ((color(t,o) == BLANCO && d.first == o.first-1)||(color(t,o) == NEGRO && d.first == o.first + 1 ));
+            break;
+
+        case ALFIL:
+            res = abs(d.first-o.first) == abs(d.second-o.second);
+            for (int x = 0; x < abs(d.first-o.first) ; ++x)
+            {
+                int sgn1 = 1;
+                int sgn2 = 1;
+                if (d.first-o.first < 0 )
+                {
+                    sgn1 = -1;
+                }
+                if (d.second - o.second < 0)
+                {
+                    sgn2 = -1;
+                }
+                res = res && casillaVacia(t, setCoord(o.first + sgn1*x,o.second+sgn2*x));
+            }
+            break;
+
+        case TORRE:
+
+            res = false;
+
+            if(d.second == o.second)
+            {
+                for (int x = min(o.first,d.first)+1; x < max(o.first,d.first) ; ++x)
+                {
+                    res = res && casillaVacia(t, setCoord(x,o.second));
+                }
+            }else if (d.first == o.first)
+            {
+                for (int y = min(o.second,d.second)+1; y < max(o.second,d.second) ; ++y)
+                {
+                    res = res && casillaVacia(t, setCoord(o.first, y));
+                }
+            }
+            break;
+
+        case REY:
+
+            res = (abs(o.first-d.first) == 1 && abs(o.second - d.second) == 1);
+            res = res || (abs(o.first-d.first) == 1 && abs(o.second - d.second) == 0);
+            res = res || (abs(o.first-d.first) == 0 && abs(o.second - d.second) == 1);
+            break;
+    }
+
+    return res;
 }
