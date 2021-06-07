@@ -304,7 +304,7 @@ bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d)
 
         case ALFIL:
             res = abs(d.first-o.first) == abs(d.second-o.second);
-            for (int x = 0; x < abs(d.first-o.first) ; ++x)
+            for (int x = 1; x < abs(d.first-o.first) ; ++x)
             {
                 int sgn1 = 1;
                 int sgn2 = 1;
