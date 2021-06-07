@@ -233,6 +233,7 @@ void tableroFeo(const string &tableroFEN)
     mostrarTableroFeo(tab);
 }
 
+// Ejercicio 1
 bool esPosicionValida(posicion const &p)
 {
     return esJugadorValido(jugador(p)) && esTableroValido(tableroActual(p));
@@ -439,6 +440,7 @@ bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d)
     return res;
 }
 
+// Ejercicio 4
 bool posicionSiguiente(posicion const &p, posicion const &q, coordenada o, coordenada d)
 {
     bool res = posicionesIgualesExceptoEn(p, q, o, d) && casillaVacia(q.first, o);
@@ -511,4 +513,29 @@ bool piezaCorrectaEnDestino(const posicion &p, const posicion &q, coordenada o, 
 bool enLineaFinalInicial(coordenada d)
 {
     return d.first == 0 || d.first == ANCHO_TABLERO - 1;
+}
+
+// Ejercicio 5
+void ordenarFilas(tablero &t)
+{
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        vector<casilla> piezas;
+        vector<int> indices;
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            casilla c = t[i][j];
+            if(c != cVACIA)
+            {
+                piezas.push_back(c);
+                indices.push_back(j);
+            }
+        }
+        ordenarVectorPares(piezas);
+        for(int k = 0; k < piezas.size(); ++k)
+        {
+            int j = indices[k];
+            t[i][j] = piezas[k];
+        }
+    }
 }

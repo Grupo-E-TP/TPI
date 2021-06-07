@@ -56,4 +56,7 @@ bool capturaPeonValida(const tablero& t, coordenada o, coordenada d);
 bool piezaCorrectaEnDestino(const posicion &p, const posicion &q, coordenada o, coordenada d);
 bool enLineaFinalInicial(coordenada d);
 
+// Ejecicio 5
+void ordenarFilas(tablero &t);
+
 #endif //AJEDREZLITE_AUXILIARES_H

@@ -28,8 +28,7 @@ bool posicionSiguienteCorrecta(posicion const &p1, posicion const &p2, coordenad
 // EJERCICIO 5
 void ordenarTablero(posicion &p)
 {
-    // completar codigo
-    return;
+    ordenarFilas(p.first);
 }
 // EJERCICIO 6
 bool finDeLaPartida(posicion const &p, int &j)
