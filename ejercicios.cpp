@@ -1,19 +1,16 @@
 #include <algorithm>
 #include "ejercicios.h"
-// Agrego:
-#include "auxiliares.h"
 
 // EJERCICIO 1
 bool posicionValida(pair<tablero, int> const &p)
 {
-    bool resp = (p.second == 1 || p.second == 2) && esTableroValido(p.first);
-    return resp;
+    return esPosicionValida(p);
 }
 
 // EJERCICIO 2
 bool posicionInicial(posicion const &p)
 {
-    return piezasEnCoordenadas(p.first) && cantidadPiezasAlInicio(p.first) && (p.second == BLANCO);
+    return piezasEnCoordenadas(p.first) && cantidadPiezasAlInicio(p.first) && jugador(p) == BLANCO;
 
 }
 // EJERCICIO 3
@@ -26,9 +23,7 @@ vector<coordenada> casillasAtacadas(posicion const &p, int j)
 // EJERCICIO 4
 bool posicionSiguienteCorrecta(posicion const &p1, posicion const &p2, coordenada o, coordenada d)
 {
-    bool resp = false;
-    // completar codigo
-    return resp;
+    return posicionSiguiente(p1, p2, o, d);
 }
 // EJERCICIO 5
 void ordenarTablero(posicion &p)

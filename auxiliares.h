@@ -15,29 +15,45 @@ vector<pair<int, int>> ordenarVectorPares(vector<pair<int, int>> &v);
 tablero inicializarTablero();
 coordenada setCoord(int i, int j);
 tablero tableroActual(posicion const &p);
+int aparicionesEnTablero(tablero t, casilla p);
+int jugador(posicion const &p);
 
 // Nuevas
 void tableroLindo(const posicion &p);
 void tableroLindo(const tablero &t);
-void tableroFeo(const string &tableroFEN);
-
-int aparicionesEnTablero(tablero t, casilla p);
-
-bool esTableroValido(const tablero &t);
-bool esMatriz(tablero t);
-bool casillasValidas(tablero t);
-bool sinPeonesNoCoronados(tablero t);
-bool cantidadValidaDePiezas(const tablero &t);
-int aparicionesEnTablero(tablero t, casilla p);
+void tableroFeo(string tableroFEN);
 int pieza(tablero const& t, coordenada c);
 int color(tablero const& t, coordenada c);
-bool piezaEnCoordenada(tablero const& t, coordenada c, int pza, int col);
-bool piezasEnCoordenadas(tablero const& t);
+
 casilla setCasilla(int i, int j);
-bool cantidadPiezasAlInicio(tablero const& t);
-bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d);
 bool casillaVacia(tablero const& t, coordenada c);
 
 
+// Ejercicio 1
+bool esPosicionValida(posicion const &p);
+bool esJugadorValido(int j);
+bool esTableroValido(const tablero& t);
+bool esMatriz(tablero t);
+bool casillasValidas(tablero t);
+bool sinPeonesNoCoronados(tablero t);
+
+// Ejercicio 2
+bool piezasEnCoordenadas(tablero const& t);
+bool piezaEnCoordenada(tablero const& t, coordenada c, int pza, int col);
+bool cantidadPiezasAlInicio(tablero const& t);
+bool cantidadValidaDePiezas(const tablero& t);
+
+// Ejercicio 3
+bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d);
+
+// Ejercicio 4
+bool posicionSiguiente(posicion const &p1, posicion const &p2, coordenada o, coordenada d);
+bool posicionesIgualesExceptoEn(posicion const &p1, posicion const &p2, coordenada o, coordenada d);
+bool esMovimientoValido(const posicion &p, coordenada o, coordenada d);
+bool esCapturaValida(const posicion& p, coordenada o, coordenada d);
+bool casillaAtacada(const tablero& t, coordenada o, coordenada d);
+bool capturaPeonValida(const tablero& t, coordenada o, coordenada d);
+bool piezaCorrectaEnDestino(const posicion &p, const posicion &q, coordenada o, coordenada d);
+bool enLineaFinalInicial(coordenada d);
 
 #endif //AJEDREZLITE_AUXILIARES_H

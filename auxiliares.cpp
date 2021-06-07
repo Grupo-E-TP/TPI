@@ -21,6 +21,11 @@ coordenada setCoord(int i, int j)
     return make_pair(i, j);
 }
 
+int jugador(posicion const &p)
+{
+    return p.second;
+}
+
 casilla setCasilla(int i, int j)
 {
     return make_pair(i, j);
@@ -228,6 +233,16 @@ void tableroFeo(const string &tableroFEN)
     mostrarTableroFeo(tab);
 }
 
+bool esPosicionValida(posicion const &p)
+{
+    return esJugadorValido(jugador(p)) && esTableroValido(tableroActual(p));
+}
+
+bool esJugadorValido(int const j)
+{
+    return j== BLANCO || j==NEGRO;
+}
+
 bool esTableroValido(const tablero &t)
 {
     return esMatriz(t) && casillasValidas(t) && sinPeonesNoCoronados(t) && cantidadValidaDePiezas(t);
@@ -422,4 +437,78 @@ bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d)
     }
 
     return res;
+}
+
+bool posicionSiguiente(posicion const &p, posicion const &q, coordenada o, coordenada d)
+{
+    bool res = posicionesIgualesExceptoEn(p, q, o, d) && casillaVacia(q.first, o);
+    res &= (esMovimientoValido(p, o, d) || esCapturaValida(p, o, d));
+    res &= piezaCorrectaEnDestino(p, q, o, d);
+    return res;
+}
+
+bool posicionesIgualesExceptoEn(posicion const &p1, posicion const &p2, coordenada o, coordenada d)
+{
+    bool res = true;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            casilla c1 = p1.first[i][j];
+            casilla c2 = p2.first[i][j];
+            if(setCoord(i, j) != o && setCoord(i, j) != d)
+            {
+                res &= c1 == c2;
+            }
+        }
+    }
+    return res;
+}
+
+bool esMovimientoValido(const posicion &p, coordenada o, coordenada d)
+{
+    return jugador(p) == color(p.first, o) && !casillaVacia(p.first, o) &&
+           casillaVacia(p.first, d) && movimientoPiezaValido(p.first, o, d);
+}
+
+bool esCapturaValida(const posicion &p, coordenada o, coordenada d)
+{
+    return !casillaVacia(p.first, o) && !casillaVacia(p.first, d) && color(p.first, d) != color(p.first, d) &&
+           casillaAtacada(p.first, o, d);
+}
+
+bool casillaAtacada(const tablero &t, coordenada o, coordenada d)
+{
+    bool res = !casillaVacia(t, o);
+    if(pieza(t, o) == PEON)
+        res &= movimientoPiezaValido(t, o, d);
+    else
+        capturaPeonValida(t, o, d);
+    return res;
+}
+
+bool capturaPeonValida(const tablero &t, coordenada o, coordenada d)
+{
+    bool res = abs(d.first - o.first) == 1;
+    if(color(t, o) == BLANCO)
+        res &= d.second == o.second - 1;
+    else
+        res &= d.second == o.second + 1;
+    return res;
+}
+
+bool piezaCorrectaEnDestino(const posicion &p, const posicion &q, coordenada o, coordenada d)
+{
+    //        ¿color(p.first, d)?
+    bool res = color(p.first, o) == color(q.first, d);
+    if(enLineaFinalInicial(d))
+        res &= pieza(q.first, d) == TORRE;
+    else
+        res &= pieza(q.first, d) == pieza(p.first, o);
+    return res;
+}
+
+bool enLineaFinalInicial(coordenada d)
+{
+    return d.first == 0 || d.first == ANCHO_TABLERO - 1;
 }
