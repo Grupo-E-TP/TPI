@@ -29,5 +29,15 @@ bool casillasValidas(tablero t);
 bool sinPeonesNoCoronados(tablero t);
 bool cantidadValidaDePiezas(const tablero &t);
 int aparicionesEnTablero(tablero t, casilla p);
+int pieza(tablero const& t, coordenada c);
+int color(tablero const& t, coordenada c);
+bool piezaEnCoordenada(tablero const& t, coordenada c, int pza, int col);
+bool piezasEnCoordenadas(tablero const& t);
+casilla setCasilla(int i, int j);
+bool cantidadPiezasAlInicio(tablero const& t);
+bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d);
+bool casillaVacia(tablero const& t, coordenada c);
+
+
 
 #endif //AJEDREZLITE_AUXILIARES_H
