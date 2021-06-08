@@ -319,7 +319,7 @@ int aparicionesEnTablero(tablero t, casilla p)
     }
     return apariciones;
 }
-int pieza(tablero const& t, coordenada c)
+int pieza(tablero const &t, coordenada c)
 {
     return t[c.first][c.second].first;
 }
@@ -475,17 +475,21 @@ bool esMovimientoValido(const posicion &p, coordenada o, coordenada d)
 
 bool esCapturaValida(const posicion &p, coordenada o, coordenada d)
 {
-    return !casillaVacia(p.first, o) && !casillaVacia(p.first, d) && color(p.first, d) != color(p.first, d) &&
-           casillaAtacada(p.first, o, d);
+    bool a = !casillaVacia(p.first, o) && !casillaVacia(p.first, d);
+    a &= color(p.first, o) != color(p.first, d);
+    a &= casillaAtacada(p.first, o, d);
+    return a;
+    // return !casillaVacia(p.first, o) && !casillaVacia(p.first, d) && color(p.first, o) != color(p.first, d) &&
+    //        casillaAtacada(p.first, o, d);
 }
 
 bool casillaAtacada(const tablero &t, coordenada o, coordenada d)
 {
     bool res = !casillaVacia(t, o);
-    if(pieza(t, o) == PEON)
+    if(pieza(t, o) != PEON)
         res &= movimientoPiezaValido(t, o, d);
     else
-        capturaPeonValida(t, o, d);
+        res &= capturaPeonValida(t, o, d);
     return res;
 }
 
@@ -538,4 +542,188 @@ void ordenarFilas(tablero &t)
             t[i][j] = piezas[k];
         }
     }
+}
+
+// Ejercicio 6
+bool esEmpate(const posicion &p)
+{
+    return soloHayReyes(p.first) || (!jugadorEnJaque(p) && !hayMovimientosLegales(p));
+}
+
+bool soloHayReyes(const tablero &t)
+{
+    int piezasNoReales = 0;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            int pieza = t[i][j].first;
+            piezasNoReales += (pieza != REY && pieza != VACIO) ? 1 : 0;
+        }
+    }
+    return piezasNoReales == 0;
+}
+
+// No aparece en el pdf
+bool jugadorEnJaque(const posicion &p)
+{
+    int a = cuantasAtacanAlRey(p);
+    return a > 0;
+}
+
+int cuantasAtacanAlRey(const posicion &p)
+{
+    int res = 0;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            coordenada o = setCoord(i, j);
+            if(atacaAlRey(p, o) && color(p.first, o) != p.second)
+                res++;
+        }
+    }
+    return res;
+}
+
+coordenada dondeEstaElRey(const tablero &t, int jugador)
+{
+    casilla rey = setCasilla(4, jugador);
+    coordenada coordenadasRey;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            casilla c = t[i][j];
+            if(c == rey)
+                coordenadasRey = setCoord(i, j);
+        }
+    }
+    return coordenadasRey;
+}
+
+bool atacaAlRey(const posicion &p, coordenada o)
+{
+    coordenada coordenadasRey = dondeEstaElRey(p.first, p.second);
+    bool a = esCapturaValida(p, o, coordenadasRey);
+    return a;
+}
+
+bool hayMovimientosLegales(const posicion &p)
+{
+    bool res = false;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            coordenada o = setCoord(i, j);
+            if(color(p.first, o) == p.second && puedeMoverse(p, o))
+            {
+                res = true;
+            }
+        }
+    }
+    return true;
+}
+
+// No aparece en el pdf
+// bool piezasDeJugador(const posicion &p, int jugador, const vector<coordenada> &movibles)
+// {
+//     bool res = true;
+//     for(int i = 0; i < movibles.size(); ++i)
+//     {
+//         res &= movibles[i].second == jugador;
+//     }
+//     return res;
+// }
+//
+// bool tienenMovimiento(const posicion &p, const vector<coordenada> &piezas)
+// {
+//     bool res = true;
+//     for(int i = 0; i < piezas.size(); ++i)
+//     {
+//         res &= puedeMoverse(p, piezas[i]);
+//     }
+// }
+
+bool puedeMoverse(const posicion &p, coordenada o)
+{
+    bool res = false;
+    // Compruebo si la pieza que está en o puede moverse a alguna casilla contigua
+    for(int i = -1; i < 1; ++i)
+    {
+        for(int j = -1; j < 1; ++j)
+        {
+            int o0 = o.first, o1 = o.second;
+            coordenada d = setCoord(o0 + i, o1 + j);
+            if(coordenadaEnRango(d))
+            {
+                res |= esCapturaValida(p, o, d) || esMovimientoValido(p, o, d);
+            }
+        }
+    }
+    return res;
+}
+
+bool coordenadaEnRango(coordenada c)
+{
+    return 0 <= c.first && c.first < ANCHO_TABLERO && 0 <= c.second && c.second < ANCHO_TABLERO;
+}
+
+bool esJaqueMate(const posicion &p)
+{
+    bool a = !existeMovimientoParaSalirDelJaque(p);
+    bool b = jugadorEnJaque(p);
+    return b && a;
+}
+
+bool existeMovimientoParaSalirDelJaque(const posicion &p)
+{
+    bool res = false;
+    // ¿Habrá una mejor forma de hacer esto?
+    // La especificación pide comprobar si existen dos coordenadas o y d tales que esJugadaLegal(p, o, d)
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            for(int k = 0; k < ANCHO_TABLERO; ++k)
+            {
+                for(int l = 0; l < ANCHO_TABLERO; ++l)
+                {
+                    coordenada o = setCoord(i, j);
+                    coordenada d = setCoord(k, j);
+                    if(color(p.first, o) == p.second)
+                    {
+                        res |= esJugadaLegal(p, o, d);
+                    }
+                }
+            }
+        }
+    }
+    return res;
+}
+
+bool esJugadaLegal(const posicion &p, coordenada o, coordenada d)
+{
+    return (esMovimientoValido(p, o, d) || esCapturaValida(p, o, d)) && !loPoneEnJaque(p, o, d);
+}
+
+bool loPoneEnJaque(const posicion &p, coordenada o, coordenada d)
+{
+    posicion q = ejecutarMovimiento(p, o, d);
+    return jugadorEnJaque(q);
+}
+
+posicion ejecutarMovimiento(posicion p, coordenada o, coordenada d)
+{
+    casilla tmp = obtenerCasilla(p.first, o);
+    p.first[o.first][o.second] = cVACIA;
+    p.first[d.first][d.second] = tmp;
+    return p;
+}
+
+// No aparece en el pdf
+casilla obtenerCasilla(const tablero &t, coordenada o)
+{
+    return t[o.first][o.second];
 }

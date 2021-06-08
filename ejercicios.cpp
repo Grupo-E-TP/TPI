@@ -33,9 +33,10 @@ void ordenarTablero(posicion &p)
 // EJERCICIO 6
 bool finDeLaPartida(posicion const &p, int &j)
 {
-    bool resp = false;
-    // completar codigo
-    return resp;
+    bool empate = esEmpate(p);
+    j = empate ? 0 : 3 - p.second;
+    bool mate = esJaqueMate(p);
+    return empate || esJaqueMate(p);
 }
 // EJERCICIO 7
 bool hayJaqueDescubierto(posicion const &p)
