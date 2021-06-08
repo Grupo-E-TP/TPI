@@ -385,7 +385,7 @@ bool casillaVacia(tablero const& t, coordenada c)
 
 bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d)
 {
-    bool res;
+    bool res = false;
     switch (pieza(t,o))
     {
         case PEON:
@@ -409,19 +409,19 @@ bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d)
                 res = res && casillaVacia(t, setCoord(o.first + sgn1*x,o.second+sgn2*x));
             }
             break;
-
         case TORRE:
 
-            res = false;
 
             if(d.second == o.second)
             {
+                res = true;
                 for (int x = min(o.first,d.first)+1; x < max(o.first,d.first) ; ++x)
                 {
                     res = res && casillaVacia(t, setCoord(x,o.second));
                 }
             }else if (d.first == o.first)
             {
+                res = true;
                 for (int y = min(o.second,d.second)+1; y < max(o.second,d.second) ; ++y)
                 {
                     res = res && casillaVacia(t, setCoord(o.first, y));
