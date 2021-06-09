@@ -536,10 +536,15 @@ bool casillaAtacada(const tablero &t, coordenada o, coordenada d)
 bool capturaPeonValida(const tablero &t, coordenada o, coordenada d)
 {
     bool res = abs(d.first - o.first) == 1;
-    if(color(t, o) == BLANCO)
-        res &= d.second == o.second - 1;
+    if(color(t, o) == BLANCO) {
+        res &= o.first - 1 == d.first;
+        res &= d.second == o.second - 1 || d.second == o.second + 1;
+    }
     else
-        res &= d.second == o.second + 1;
+    {
+        res &= o.first + 1 == d.first;
+        res &= d.second == o.second - 1 || d.second == o.second + 1;
+    }
     return res;
 }
 
