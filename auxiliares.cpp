@@ -245,7 +245,7 @@ bool esPosicionValida(posicion const &p)
 
 bool esJugadorValido(int const j)
 {
-    return j== BLANCO || j==NEGRO;
+    return j == BLANCO || j == NEGRO;
 }
 
 bool esTableroValido(const tablero &t)
@@ -284,7 +284,7 @@ bool sinPeonesNoCoronados(tablero t)
     for(int i = 0; i < ANCHO_TABLERO; ++i)
     {
         int pieza1 = t[0][i].first;
-        int pieza2 = t[ANCHO_TABLERO-1][i].first;
+        int pieza2 = t[ANCHO_TABLERO - 1][i].first;
         res &= pieza1 != PEON && pieza2 != PEON;
     }
     return res;
@@ -301,8 +301,8 @@ bool cantidadValidaDePiezas(const tablero &t)
     res &= aparicionesEnTablero(t, cALFIL_N) <= 2;
 
     // Torres
-    res &= aparicionesEnTablero(t, cPEON_B) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_B) );
-    res &= aparicionesEnTablero(t, cPEON_N) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_N) );
+    res &= aparicionesEnTablero(t, cPEON_B) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_B));
+    res &= aparicionesEnTablero(t, cPEON_N) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_N));
 
     // Reyes
     res &= aparicionesEnTablero(t, cREY_B) == 1;
@@ -328,89 +328,89 @@ int pieza(tablero const &t, coordenada c)
     return t[c.first][c.second].first;
 }
 
-int color(tablero const& t, coordenada c)
+int color(tablero const &t, coordenada c)
 {
     return t[c.first][c.second].second;
 }
 
-bool piezaEnCoordenada(tablero const& t, coordenada c, int pza, int col)
+bool piezaEnCoordenada(tablero const &t, coordenada c, int pza, int col)
 {
-    return (pieza(t,c) == pza) && (color(t,c) == col);
+    return (pieza(t, c) == pza) && (color(t, c) == col);
 }
 
-bool piezasEnCoordenadas(tablero const& t)
+bool piezasEnCoordenadas(tablero const &t)
 {
     bool res = true;
     //PEONES
-    for (int x = 0; x < ANCHO_TABLERO; ++x)
+    for(int x = 0; x < ANCHO_TABLERO; ++x)
     {
-        res = res && piezaEnCoordenada(t, setCoord(1,x),PEON,NEGRO);
-        res = res && piezaEnCoordenada(t, setCoord(6,x),PEON,BLANCO);
+        res = res && piezaEnCoordenada(t, setCoord(1, x), PEON, NEGRO);
+        res = res && piezaEnCoordenada(t, setCoord(6, x), PEON, BLANCO);
     }
 
     //TORRES
 
-    res = res && piezaEnCoordenada(t, setCoord(0,0),TORRE,NEGRO);
-    res = res && piezaEnCoordenada(t, setCoord(0,ANCHO_TABLERO-1),TORRE,NEGRO);
-    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO-1,0),TORRE,BLANCO);
-    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO-1,ANCHO_TABLERO-1),TORRE,BLANCO);
+    res = res && piezaEnCoordenada(t, setCoord(0, 0), TORRE, NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(0, ANCHO_TABLERO - 1), TORRE, NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, 0), TORRE, BLANCO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, ANCHO_TABLERO - 1), TORRE, BLANCO);
 
     // ALFILES
 
-    res = res && piezaEnCoordenada(t, setCoord(0,2),ALFIL,NEGRO);
-    res = res && piezaEnCoordenada(t, setCoord(0,ANCHO_TABLERO-3),ALFIL,NEGRO);
-    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO-1,2),ALFIL,BLANCO);
-    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO-1,ANCHO_TABLERO-3),ALFIL,BLANCO);
+    res = res && piezaEnCoordenada(t, setCoord(0, 2), ALFIL, NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(0, ANCHO_TABLERO - 3), ALFIL, NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, 2), ALFIL, BLANCO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, ANCHO_TABLERO - 3), ALFIL, BLANCO);
 
     //REYES
 
-    res = res && piezaEnCoordenada(t, setCoord(0,4),REY,NEGRO);
-    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO-1,4),REY,BLANCO);
+    res = res && piezaEnCoordenada(t, setCoord(0, 4), REY, NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, 4), REY, BLANCO);
 
     return res;
 }
 
-bool cantidadPiezasAlInicio(tablero const& t)
+bool cantidadPiezasAlInicio(tablero const &t)
 {
     bool res = true;
-    res = aparicionesEnTablero(t,setCasilla(TORRE,NEGRO)) == 2;
-    res = res && aparicionesEnTablero(t,setCasilla(TORRE,BLANCO)) == 2;
-    res = res && aparicionesEnTablero(t,setCasilla(ALFIL,NEGRO)) == 2;
-    res = res && aparicionesEnTablero(t,setCasilla(ALFIL,BLANCO)) == 2;
-    res = res && aparicionesEnTablero(t,setCasilla(PEON,NEGRO)) == ANCHO_TABLERO;
-    res = res && aparicionesEnTablero(t,setCasilla(PEON,BLANCO)) == ANCHO_TABLERO;
+    res = aparicionesEnTablero(t, setCasilla(TORRE, NEGRO)) == 2;
+    res = res && aparicionesEnTablero(t, setCasilla(TORRE, BLANCO)) == 2;
+    res = res && aparicionesEnTablero(t, setCasilla(ALFIL, NEGRO)) == 2;
+    res = res && aparicionesEnTablero(t, setCasilla(ALFIL, BLANCO)) == 2;
+    res = res && aparicionesEnTablero(t, setCasilla(PEON, NEGRO)) == ANCHO_TABLERO;
+    res = res && aparicionesEnTablero(t, setCasilla(PEON, BLANCO)) == ANCHO_TABLERO;
     return res;
 }
 
-bool casillaVacia(tablero const& t, coordenada c)
+bool casillaVacia(tablero const &t, coordenada c)
 {
     return cVACIA == t[c.first][c.second];
 }
 
-bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d)
+bool movimientoPiezaValido(tablero const &t, coordenada o, coordenada d)
 {
     bool res = false;
-    switch (pieza(t,o))
+    switch(pieza(t, o))
     {
         case PEON:
-            res = (d.second == o.second) && ((color(t,o) == BLANCO && d.first == o.first-1)||(color(t,o) == NEGRO && d.first == o.first + 1 ));
+            res = (d.second == o.second) && ((color(t, o) == BLANCO && d.first == o.first - 1) || (color(t, o) == NEGRO && d.first == o.first + 1));
             break;
 
         case ALFIL:
-            res = abs(d.first-o.first) == abs(d.second-o.second);
-            for (int x = 1; x < abs(d.first-o.first) ; ++x)
+            res = abs(d.first - o.first) == abs(d.second - o.second);
+            for(int x = 1; x < abs(d.first - o.first); ++x)
             {
                 int sgn1 = 1;
                 int sgn2 = 1;
-                if (d.first-o.first < 0 )
+                if(d.first - o.first < 0)
                 {
                     sgn1 = -1;
                 }
-                if (d.second - o.second < 0)
+                if(d.second - o.second < 0)
                 {
                     sgn2 = -1;
                 }
-                res = res && casillaVacia(t, setCoord(o.first + sgn1*x,o.second+sgn2*x));
+                res = res && casillaVacia(t, setCoord(o.first + sgn1 * x, o.second + sgn2 * x));
             }
             break;
         case TORRE:
@@ -419,14 +419,15 @@ bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d)
             if(d.second == o.second)
             {
                 res = true;
-                for (int x = min(o.first,d.first)+1; x < max(o.first,d.first) ; ++x)
+                for(int x = min(o.first, d.first) + 1; x < max(o.first, d.first); ++x)
                 {
-                    res = res && casillaVacia(t, setCoord(x,o.second));
+                    res = res && casillaVacia(t, setCoord(x, o.second));
                 }
-            }else if (d.first == o.first)
+            }
+            else if(d.first == o.first)
             {
                 res = true;
-                for (int y = min(o.second,d.second)+1; y < max(o.second,d.second) ; ++y)
+                for(int y = min(o.second, d.second) + 1; y < max(o.second, d.second); ++y)
                 {
                     res = res && casillaVacia(t, setCoord(o.first, y));
                 }
@@ -435,9 +436,9 @@ bool movimientoPiezaValido(tablero const& t, coordenada o, coordenada d)
 
         case REY:
 
-            res = (abs(o.first-d.first) == 1 && abs(o.second - d.second) == 1);
-            res = res || (abs(o.first-d.first) == 1 && abs(o.second - d.second) == 0);
-            res = res || (abs(o.first-d.first) == 0 && abs(o.second - d.second) == 1);
+            res = (abs(o.first - d.first) == 1 && abs(o.second - d.second) == 1);
+            res = res || (abs(o.first - d.first) == 1 && abs(o.second - d.second) == 0);
+            res = res || (abs(o.first - d.first) == 0 && abs(o.second - d.second) == 1);
             break;
     }
 
@@ -564,7 +565,6 @@ bool soloHayReyes(const tablero &t)
     return piezasNoReales == 0;
 }
 
-// No aparece en el pdf
 bool jugadorEnJaque(const posicion &p)
 {
     return cuantasAtacanAlRey(p) > 0;
@@ -624,7 +624,6 @@ bool hayMovimientosLegales(const posicion &p)
     return true;
 }
 
-// No aparece en el pdf
 // bool piezasDeJugador(const posicion &p, int jugador, const vector<coordenada> &movibles)
 // {
 //     bool res = true;
@@ -697,7 +696,7 @@ vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o)
     switch(pieza(p.first, o))
     {
         case PEON:
-            for(int i = -1; i <= 1 ; i += 2)
+            for(int i = -1; i <= 1; i += 2)
             {
                 for(int j = -1; j <= 1; ++j)
                 {
@@ -733,7 +732,7 @@ vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o)
             }
             break;
         case REY:
-            for(int i = -1; i <= 1 ; ++i)
+            for(int i = -1; i <= 1; ++i)
             {
                 for(int j = -1; j <= 1; ++j)
                 {
@@ -774,7 +773,6 @@ void ejecutarMovimiento(posicion &p, coordenada o, coordenada d)
     }
 }
 
-// No aparece en el pdf
 casilla obtenerCasilla(const tablero &t, coordenada o)
 {
     return t[o.first][o.second];

@@ -11,7 +11,6 @@ bool posicionValida(pair<tablero, int> const &p)
 bool posicionInicial(posicion const &p)
 {
     return piezasEnCoordenadas(p.first) && cantidadPiezasAlInicio(p.first) && jugador(p) == BLANCO;
-
 }
 // EJERCICIO 3
 vector<coordenada> casillasAtacadas(posicion const &p, int j)
