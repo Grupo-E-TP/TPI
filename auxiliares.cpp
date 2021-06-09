@@ -482,6 +482,46 @@ bool esCapturaValida(const posicion &p, coordenada o, coordenada d)
     // return !casillaVacia(p.first, o) && !casillaVacia(p.first, d) && color(p.first, o) != color(p.first, d) &&
     //        casillaAtacada(p.first, o, d);
 }
+// Probablemente pueda hacerse mas corto?
+// Igualmente no se si la vamos a usar.
+bool sonCasillasAtacadas(const tablero &t, int jugador, vector<coordenada> &atacadas)
+{
+    bool res = true;
+    for(int i = 0; i < ANCHO_TABLERO; i++)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; j++)
+        {
+            coordenada c = setCoord(i,j);
+            if (cantidadAparicionesVector(c,atacadas) == 1)
+            {
+                int laAtacan = 0;
+                for(int k = 0; k < ANCHO_TABLERO; k++)
+                {
+                    for(int l = 0; l < ANCHO_TABLERO; l++)
+                    {
+                        coordenada o = setCoord(k,l);
+                        if(o != c && color(t,o) == jugador && casillaAtacada(t,o,c))
+                        {
+                            laAtacan++;
+                        }
+                    }
+                }
+                res = laAtacan > 0;
+            }
+        }
+    }
+    return res;
+}
+
+int cantidadAparicionesVector(coordenada c, vector<coordenada> v)
+{
+    int apariciones = 0;
+    for(int i = 0; i < v.size(); i++)
+    {
+       apariciones += v[i] == c ? 1 : 0;
+    }
+    return apariciones;
+}
 
 bool casillaAtacada(const tablero &t, coordenada o, coordenada d)
 {

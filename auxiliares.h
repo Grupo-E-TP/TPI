@@ -44,6 +44,8 @@ bool cantidadValidaDePiezas(const tablero &t);
 
 // Ejercicio 3
 bool movimientoPiezaValido(tablero const &t, coordenada o, coordenada d);
+int cantidadAparicionesVector(coordenada c, vector<coordenada> v);
+bool sonCasillasAtacadas(const tablero &t, int j, vector<coordenada> atacadas);
 
 // Ejercicio 4
 bool posicionSiguiente(posicion const &p1, posicion const &p2, coordenada o, coordenada d);
