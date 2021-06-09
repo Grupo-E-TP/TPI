@@ -56,7 +56,7 @@ string generarTableroFEN(const tablero &tab)
     {
         for(int j = 0; j < tab[0].size(); ++j)
         {
-            char pieza;
+            char pieza = 0;
             casilla c = tab[i][j];
 
             // Identifica la pieza
@@ -551,9 +551,8 @@ bool capturaPeonValida(const tablero &t, coordenada o, coordenada d)
 
 bool piezaCorrectaEnDestino(const posicion &p, const posicion &q, coordenada o, coordenada d)
 {
-    //        ¿color(p.first, d)?
     bool res = color(p.first, o) == color(q.first, d);
-    if(enLineaFinalInicial(d))
+    if(enLineaFinalInicial(d) && pieza(p.first, o) == PEON)
         res &= pieza(q.first, d) == TORRE;
     else
         res &= pieza(q.first, d) == pieza(p.first, o);
@@ -660,13 +659,13 @@ bool hayMovimientosLegales(const posicion &p)
         for(int j = 0; j < ANCHO_TABLERO; ++j)
         {
             coordenada o = setCoord(i, j);
-            if(color(p.first, o) == p.second && puedeMoverse(p, o))
+            if(color(p.first, o) == p.second && !jugadasDisponibles(p, o).empty())
             {
                 res = true;
             }
         }
     }
-    return true;
+    return res;
 }
 
 // bool piezasDeJugador(const posicion &p, int jugador, const vector<coordenada> &movibles)
@@ -688,24 +687,24 @@ bool hayMovimientosLegales(const posicion &p)
 //     }
 // }
 
-bool puedeMoverse(const posicion &p, coordenada o)
-{
-    bool res = false;
-    // Compruebo si la pieza que está en o puede moverse a alguna casilla contigua
-    for(int i = -1; i < 1; ++i)
-    {
-        for(int j = -1; j < 1; ++j)
-        {
-            int o0 = o.first, o1 = o.second;
-            coordenada d = setCoord(o0 + i, o1 + j);
-            if(coordenadaEnRango(d))
-            {
-                res |= esCapturaValida(p, o, d) || esMovimientoValido(p, o, d);
-            }
-        }
-    }
-    return res;
-}
+// bool puedeMoverse(const posicion &p, coordenada o)
+// {
+//     bool res = false;
+//     // Compruebo si la pieza que está en o puede moverse a alguna casilla contigua
+//     for(int i = -1; i < 1; ++i)
+//     {
+//         for(int j = -1; j < 1; ++j)
+//         {
+//             int o0 = o.first, o1 = o.second;
+//             coordenada d = setCoord(o0 + i, o1 + j);
+//             if(coordenadaEnRango(d))
+//             {
+//                 res |= esCapturaValida(p, o, d) || esMovimientoValido(p, o, d);
+//             }
+//         }
+//     }
+//     return res;
+// }
 
 bool coordenadaEnRango(coordenada c)
 {
