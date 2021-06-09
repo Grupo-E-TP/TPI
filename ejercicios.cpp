@@ -18,6 +18,27 @@ vector<coordenada> casillasAtacadas(posicion const &p, int j)
 {
     vector<coordenada> cA;
     // completar codigo
+    for(int i = 0; i < ANCHO_TABLERO; i++)
+    {
+        for(int u = 0; u < ANCHO_TABLERO; u++)
+        {
+            coordenada o = setCoord(i,u);
+            if(color(p.first,o) == j)
+            {
+                for(int k = 0; k < ANCHO_TABLERO; k++)
+                {
+                    for(int l = 0; l < ANCHO_TABLERO; l++)
+                    {
+                        coordenada d = setCoord(k,l);
+                        if(casillaAtacada(p.first,o,d) && cantidadAparicionesVector(d,cA) == 0)
+                        {
+                            cA.push_back(d);
+                        }
+                    }
+                }
+            }
+        }
+    }
     return cA;
 }
 // EJERCICIO 4
