@@ -611,19 +611,19 @@ bool soloHayReyes(const tablero &t)
 
 bool jugadorEnJaque(const posicion &p)
 {
-    return cuantasAtacanAlRey(p) > 0;
+    return cualesAtacanAlRey(p).size() > 0;
 }
 
-int cuantasAtacanAlRey(const posicion &p)
+vector<coordenada> cualesAtacanAlRey(const posicion &p)
 {
-    int res = 0;
+    vector<coordenada> res;
     for(int i = 0; i < ANCHO_TABLERO; ++i)
     {
         for(int j = 0; j < ANCHO_TABLERO; ++j)
         {
             coordenada o = setCoord(i, j);
             if(atacaAlRey(p, o) && color(p.first, o) != p.second)
-                res++;
+                res.push_back(o);
         }
     }
     return res;
@@ -786,7 +786,6 @@ vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o)
                 }
             }
     }
-    int a = 0;
     return res;
 }
 
@@ -842,4 +841,18 @@ void ejecutarJugadaForzada(posicion &p)
             }
         }
     }
+}
+
+bool esJaqueDescubierto(posicion p, coordenada o, coordenada d)
+{
+    bool res = false;
+    ejecutarMovimiento(p, o, d);
+    cambiarJugador(p);
+    coordenada rey = dondeEstaElRey(p.first, jugador(p));
+    vector<coordenada> regicidas = cualesAtacanAlRey(p);
+    for(int i = 0; i < regicidas.size(); ++i)
+    {
+        res |= jugadorEnJaque(p) && atacaAlRey(p, regicidas[i]) && regicidas[i] != d;
+    }
+    return res;
 }

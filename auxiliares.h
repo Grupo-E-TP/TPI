@@ -67,7 +67,7 @@ bool esEmpate(const posicion &p);
 bool esJaqueMate(const posicion &p);
 bool soloHayReyes(const tablero &t);
 bool jugadorEnJaque(const posicion &p);
-int cuantasAtacanAlRey(const posicion &p);
+vector<coordenada> cualesAtacanAlRey(const posicion &p);
 coordenada dondeEstaElRey(const tablero &t, int jugador);
 bool atacaAlRey(const posicion &p, coordenada o);
 bool hayMovimientosLegales(const posicion &p);
@@ -81,7 +81,7 @@ void ejecutarMovimiento(posicion &p, coordenada o, coordenada d);
 casilla obtenerCasilla(const tablero &t, coordenada o);
 
 // Ejercicio 7
-
+bool esJaqueDescubierto(posicion p, coordenada o, coordenada d);
 
 // Ejercicio 8
 void cambiarJugador(posicion &p);

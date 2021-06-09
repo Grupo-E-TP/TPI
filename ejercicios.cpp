@@ -61,9 +61,23 @@ bool finDeLaPartida(posicion const &p, int &j)
 // EJERCICIO 7
 bool hayJaqueDescubierto(posicion const &p)
 {
-    bool resp = false;
-    // completar codigo
-    return resp;
+    bool res = false;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            coordenada o = setCoord(i, j);
+            if(color(p.first, o) == jugador(p))
+            {
+                vector<coordenada> jugadas = jugadasDisponibles(p, o);
+                for(int k = 0; k < jugadas.size(); ++k)
+                {
+                    res |= esJaqueDescubierto(p, o, jugadas[k]);
+                }
+            }
+        }
+    }
+    return res;
 }
 // EJERCICIO 8
 void ejecutarSecuenciaForzada(posicion &p, secuencia s)
