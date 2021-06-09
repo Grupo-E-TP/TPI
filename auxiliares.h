@@ -8,7 +8,7 @@
 using namespace std;
 // definir aqui las funciones
 pair<int, int> mp(int a, int b);
-
+void mostrarTableroFeo(const tablero &t);
 vector<pair<int, int>> ordenarVectorPares(vector<pair<int, int>> &v);
 tablero inicializarTablero();
 coordenada setCoord(int i, int j);
@@ -16,16 +16,17 @@ bool coordenadaEnRango(coordenada c);
 tablero tableroActual(posicion const &p);
 int aparicionesEnTablero(tablero t, casilla p);
 int jugador(posicion const &p);
+int contrincante(int j);
 
-// Nuevas
 void tableroLindo(const posicion &p);
 void tableroLindo(const tablero &t);
-void tableroFeo(string tableroFEN);
+void tableroFeo(const string &tableroFEN);
 int pieza(tablero const &t, coordenada c);
 int color(tablero const &t, coordenada c);
 
 casilla setCasilla(int i, int j);
 bool casillaVacia(tablero const &t, coordenada c);
+vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o);
 
 
 // Ejercicio 1
@@ -34,6 +35,7 @@ bool esJugadorValido(int j);
 bool esTableroValido(const tablero &t);
 bool esMatriz(tablero t);
 bool casillasValidas(tablero t);
+bool casillaValida(casilla c);
 bool sinPeonesNoCoronados(tablero t);
 
 // Ejercicio 2
@@ -74,9 +76,16 @@ bool tienenMovimiento(const posicion &p, const vector<coordenada> &piezas);
 bool puedeMoverse(const posicion &p, coordenada o);
 bool existeMovimientoParaSalirDelJaque(const posicion &p);
 bool esJugadaLegal(const posicion &p, coordenada o, coordenada d);
-bool loPoneEnJaque(const posicion &p, coordenada o, coordenada d);
-posicion ejecutarMovimiento(posicion p, coordenada o, coordenada d);
+bool loPoneEnJaque(posicion p, coordenada o, coordenada d);
+void ejecutarMovimiento(posicion &p, coordenada o, coordenada d);
 casilla obtenerCasilla(const tablero &t, coordenada o);
+
+// Ejercicio 7
+
+
+// Ejercicio 8
+void cambiarJugador(posicion &p);
+void ejecutarJugadaForzada(posicion &p);
 
 
 #endif //AJEDREZLITE_AUXILIARES_H

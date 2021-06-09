@@ -26,6 +26,11 @@ int jugador(posicion const &p)
     return p.second;
 }
 
+int contrincante(int j)
+{
+    return j == BLANCO ? NEGRO : BLANCO;
+}
+
 casilla setCasilla(int i, int j)
 {
     return make_pair(i, j);
@@ -43,16 +48,15 @@ tablero inicializarTablero()
     return out;
 }
 
-// Nuevas
 string generarTableroFEN(const tablero &tab)
 {
     string tableroFEN, fila;
     int casillasVacias = 0;
-    char pieza;
     for(int i = 0; i < tab.size(); ++i)
     {
         for(int j = 0; j < tab[0].size(); ++j)
         {
+            char pieza;
             casilla c = tab[i][j];
 
             // Identifica la pieza
@@ -75,7 +79,7 @@ string generarTableroFEN(const tablero &tab)
             }
 
             // Si encuentra una pieza, agrega las casillas vacías previas si las hubiera
-            if((pieza != '\0' || j == 7) && casillasVacias != 0)
+            if((isalpha(pieza) || j == 7) && casillasVacias != 0)
             {
                 fila += to_string(casillasVacias);
                 casillasVacias = 0;
@@ -88,7 +92,7 @@ string generarTableroFEN(const tablero &tab)
             }
 
             // Si encuentra una pieza, la agrega a la fila
-            if(pieza != '\0')
+            if(isalpha(pieza))
             {
                 fila += pieza;
             }
@@ -475,12 +479,8 @@ bool esMovimientoValido(const posicion &p, coordenada o, coordenada d)
 
 bool esCapturaValida(const posicion &p, coordenada o, coordenada d)
 {
-    bool a = !casillaVacia(p.first, o) && !casillaVacia(p.first, d);
-    a &= color(p.first, o) != color(p.first, d);
-    a &= casillaAtacada(p.first, o, d);
-    return a;
-    // return !casillaVacia(p.first, o) && !casillaVacia(p.first, d) && color(p.first, o) != color(p.first, d) &&
-    //        casillaAtacada(p.first, o, d);
+    return !casillaVacia(p.first, o) && !casillaVacia(p.first, d) && color(p.first, o) != color(p.first, d) &&
+           casillaAtacada(p.first, o, d);
 }
 // Probablemente pueda hacerse mas corto?
 // Igualmente no se si la vamos a usar.
@@ -607,8 +607,7 @@ bool soloHayReyes(const tablero &t)
 // No aparece en el pdf
 bool jugadorEnJaque(const posicion &p)
 {
-    int a = cuantasAtacanAlRey(p);
-    return a > 0;
+    return cuantasAtacanAlRey(p) > 0;
 }
 
 int cuantasAtacanAlRey(const posicion &p)
@@ -645,8 +644,7 @@ coordenada dondeEstaElRey(const tablero &t, int jugador)
 bool atacaAlRey(const posicion &p, coordenada o)
 {
     coordenada coordenadasRey = dondeEstaElRey(p.first, p.second);
-    bool a = esCapturaValida(p, o, coordenadasRey);
-    return a;
+    return esCapturaValida(p, o, coordenadasRey);
 }
 
 bool hayMovimientosLegales(const posicion &p)
@@ -712,34 +710,80 @@ bool coordenadaEnRango(coordenada c)
 
 bool esJaqueMate(const posicion &p)
 {
-    bool a = !existeMovimientoParaSalirDelJaque(p);
-    bool b = jugadorEnJaque(p);
-    return b && a;
+    return jugadorEnJaque(p) && !existeMovimientoParaSalirDelJaque(p);
 }
 
 bool existeMovimientoParaSalirDelJaque(const posicion &p)
 {
     bool res = false;
-    // ¿Habrá una mejor forma de hacer esto?
-    // La especificación pide comprobar si existen dos coordenadas o y d tales que esJugadaLegal(p, o, d)
     for(int i = 0; i < ANCHO_TABLERO; ++i)
     {
         for(int j = 0; j < ANCHO_TABLERO; ++j)
         {
-            for(int k = 0; k < ANCHO_TABLERO; ++k)
+            coordenada o = setCoord(i, j);
+            if(jugador(p) == color(p.first, o))
+                res |= !jugadasDisponibles(p, o).empty();
+        }
+    }
+    int a = 0;
+    return res;
+}
+
+// Dada una pieza en una coordenada o, devuelve las coordenadas a las que puede moverse legalmente
+// Se asume que jugador(p) == color(p.first, o)
+vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o)
+{
+    vector<coordenada> res;
+    switch(pieza(p.first, o))
+    {
+        case PEON:
+            for(int i = -1; i <= 1 ; i += 2)
             {
-                for(int l = 0; l < ANCHO_TABLERO; ++l)
+                for(int j = -1; j <= 1; ++j)
                 {
-                    coordenada o = setCoord(i, j);
-                    coordenada d = setCoord(k, j);
-                    if(color(p.first, o) == p.second)
+                    coordenada d = setCoord(o.first + i, o.second + j);
+                    if(coordenadaEnRango(d) && esJugadaLegal(p, o, d))
+                        res.push_back(d);
+                }
+            }
+            break;
+        case ALFIL:
+            for(int k = 1; k < ANCHO_TABLERO; ++k)
+            {
+                for(int i = -1; i <= 1; i += 2)
+                {
+                    for(int j = -1; j <= 1; j += 2)
                     {
-                        res |= esJugadaLegal(p, o, d);
+                        coordenada d = setCoord(o.first + i * k, o.second + j * k);
+                        if(coordenadaEnRango(d) && esJugadaLegal(p, o, d))
+                            res.push_back(d);
                     }
                 }
             }
-        }
+            break;
+        case TORRE:
+            for(int i = 0; i < ANCHO_TABLERO; ++i)
+            {
+                coordenada d = setCoord(o.first, i);
+                if(coordenadaEnRango(d) && esJugadaLegal(p, o, d))
+                    res.push_back(d);
+                d = setCoord(i, o.second);
+                if(coordenadaEnRango(d) && esJugadaLegal(p, o, d))
+                    res.push_back(d);
+            }
+            break;
+        case REY:
+            for(int i = -1; i <= 1 ; ++i)
+            {
+                for(int j = -1; j <= 1; ++j)
+                {
+                    coordenada d = setCoord(o.first + i, o.second + j);
+                    if(coordenadaEnRango(d) && esJugadaLegal(p, o, d))
+                        res.push_back(d);
+                }
+            }
     }
+    int a = 0;
     return res;
 }
 
@@ -748,22 +792,52 @@ bool esJugadaLegal(const posicion &p, coordenada o, coordenada d)
     return (esMovimientoValido(p, o, d) || esCapturaValida(p, o, d)) && !loPoneEnJaque(p, o, d);
 }
 
-bool loPoneEnJaque(const posicion &p, coordenada o, coordenada d)
+bool loPoneEnJaque(posicion p, coordenada o, coordenada d)
 {
-    posicion q = ejecutarMovimiento(p, o, d);
-    return jugadorEnJaque(q);
+    ejecutarMovimiento(p, o, d);
+    return jugadorEnJaque(p);
 }
 
-posicion ejecutarMovimiento(posicion p, coordenada o, coordenada d)
+void ejecutarMovimiento(posicion &p, coordenada o, coordenada d)
 {
-    casilla tmp = obtenerCasilla(p.first, o);
-    p.first[o.first][o.second] = cVACIA;
-    p.first[d.first][d.second] = tmp;
-    return p;
+    if(pieza(p.first, o) == PEON && (d.first == 0 || d.first == 7))
+    {
+        int col = color(p.first, o);
+        p.first[o.first][o.second] = cVACIA;
+        p.first[d.first][d.second] = make_pair(TORRE, col);
+    }
+    else
+    {
+        casilla tmp = obtenerCasilla(p.first, o);
+        p.first[o.first][o.second] = cVACIA;
+        p.first[d.first][d.second] = tmp;
+    }
 }
 
 // No aparece en el pdf
 casilla obtenerCasilla(const tablero &t, coordenada o)
 {
     return t[o.first][o.second];
+}
+
+void cambiarJugador(posicion &p)
+{
+    p.second = contrincante(jugador(p));
+}
+
+void ejecutarJugadaForzada(posicion &p)
+{
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            coordenada o = setCoord(i, j);
+            if(color(p.first, o) == jugador(p))
+            {
+                vector<coordenada> jugadasLegales = jugadasDisponibles(p, o);
+                if(!jugadasLegales.empty())
+                    ejecutarMovimiento(p, o, jugadasLegales[0]);
+            }
+        }
+    }
 }
