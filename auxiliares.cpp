@@ -1,18 +1,10 @@
 #include "auxiliares.h"
-#include "definiciones.h"
 
 using namespace std;
-// aqui se pueden ubicar todas las funciones auxiliares de soporte para la resolucion de los ejercicios
-// pair<int, int> mp(int a, int b)
-// {
-//     return make_pair(a, b);
-// }
 
-// TEST
-vector<pair<int, int>> ordenarVectorPares(vector<pair<int, int>> &v)
+vector<pair<int,int>> ordenarVectorPares(vector<pair<int,int>> &v)
 {
     sort(v.begin(), v.end());
-    // v.erase(unique(v.begin(), v.end()), v.end());
     return v;
 }
 
@@ -41,13 +33,6 @@ tablero tableroActual(posicion const &p)
     return p.first;
 }
 
-// tablero inicializarTablero()
-// {
-//     vector<casilla> fila(ANCHO_TABLERO, cVACIA);
-//     tablero out(ANCHO_TABLERO, fila);
-//     return out;
-// }
-//
 // string generarTableroFEN(const tablero &tab)
 // {
 //     string tableroFEN, fila;
@@ -341,29 +326,28 @@ bool piezaEnCoordenada(tablero const &t, coordenada c, int pza, int col)
 bool piezasEnCoordenadas(tablero const &t)
 {
     bool res = true;
-    //PEONES
+
+    // Peones
     for(int x = 0; x < ANCHO_TABLERO; ++x)
     {
         res = res && piezaEnCoordenada(t, setCoord(1, x), PEON, NEGRO);
         res = res && piezaEnCoordenada(t, setCoord(6, x), PEON, BLANCO);
     }
 
-    //TORRES
-
-    res = res && piezaEnCoordenada(t, setCoord(0, 0), TORRE, NEGRO);
-    res = res && piezaEnCoordenada(t, setCoord(0, ANCHO_TABLERO - 1), TORRE, NEGRO);
-    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, 0), TORRE, BLANCO);
-    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, ANCHO_TABLERO - 1), TORRE, BLANCO);
-
-    // ALFILES
-
+    // Alfiles
     res = res && piezaEnCoordenada(t, setCoord(0, 2), ALFIL, NEGRO);
     res = res && piezaEnCoordenada(t, setCoord(0, ANCHO_TABLERO - 3), ALFIL, NEGRO);
     res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, 2), ALFIL, BLANCO);
     res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, ANCHO_TABLERO - 3), ALFIL, BLANCO);
 
-    //REYES
+    // Torres
+    res = res && piezaEnCoordenada(t, setCoord(0, 0), TORRE, NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(0, ANCHO_TABLERO - 1), TORRE, NEGRO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, 0), TORRE, BLANCO);
+    res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, ANCHO_TABLERO - 1), TORRE, BLANCO);
 
+
+    // Reyes
     res = res && piezaEnCoordenada(t, setCoord(0, 4), REY, NEGRO);
     res = res && piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, 4), REY, BLANCO);
 
@@ -395,7 +379,6 @@ bool movimientoPiezaValido(tablero const &t, coordenada o, coordenada d)
         case PEON:
             res = (d.second == o.second) && ((color(t, o) == BLANCO && d.first == o.first - 1) || (color(t, o) == NEGRO && d.first == o.first + 1));
             break;
-
         case ALFIL:
             res = abs(d.first - o.first) == abs(d.second - o.second);
             for(int x = 1; x < abs(d.first - o.first); ++x)
@@ -414,8 +397,6 @@ bool movimientoPiezaValido(tablero const &t, coordenada o, coordenada d)
             }
             break;
         case TORRE:
-
-
             if(d.second == o.second)
             {
                 res = true;
@@ -433,15 +414,11 @@ bool movimientoPiezaValido(tablero const &t, coordenada o, coordenada d)
                 }
             }
             break;
-
         case REY:
-
             res = (abs(o.first - d.first) == 1 && abs(o.second - d.second) == 1);
             res = res || (abs(o.first - d.first) == 1 && abs(o.second - d.second) == 0);
             res = res || (abs(o.first - d.first) == 0 && abs(o.second - d.second) == 1);
-            break;
     }
-
     return res;
 }
 
@@ -483,43 +460,13 @@ bool esCapturaValida(const posicion &p, coordenada o, coordenada d)
     return !casillaVacia(p.first, o) && !casillaVacia(p.first, d) && color(p.first, o) != color(p.first, d) &&
            casillaAtacada(p.first, o, d);
 }
-// Probablemente pueda hacerse mas corto?
-// Igualmente no se si la vamos a usar.
-// bool sonCasillasAtacadas(const tablero &t, int jugador, vector<coordenada> &atacadas)
-// {
-//     bool res = true;
-//     for(int i = 0; i < ANCHO_TABLERO; i++)
-//     {
-//         for(int j = 0; j < ANCHO_TABLERO; j++)
-//         {
-//             coordenada c = setCoord(i,j);
-//             if (cantidadAparicionesVector(c,atacadas) == 1)
-//             {
-//                 int laAtacan = 0;
-//                 for(int k = 0; k < ANCHO_TABLERO; k++)
-//                 {
-//                     for(int l = 0; l < ANCHO_TABLERO; l++)
-//                     {
-//                         coordenada o = setCoord(k,l);
-//                         if(o != c && color(t,o) == jugador && casillaAtacada(t,o,c))
-//                         {
-//                             laAtacan++;
-//                         }
-//                     }
-//                 }
-//                 res = laAtacan > 0;
-//             }
-//         }
-//     }
-//     return res;
-// }
 
 int cantidadAparicionesVector(coordenada c, vector<coordenada> v)
 {
     int apariciones = 0;
     for(int i = 0; i < v.size(); i++)
     {
-       apariciones += v[i] == c ? 1 : 0;
+        apariciones += v[i] == c ? 1 : 0;
     }
     return apariciones;
 }
@@ -537,7 +484,8 @@ bool casillaAtacada(const tablero &t, coordenada o, coordenada d)
 bool capturaPeonValida(const tablero &t, coordenada o, coordenada d)
 {
     bool res = abs(d.first - o.first) == 1;
-    if(color(t, o) == BLANCO) {
+    if(color(t, o) == BLANCO)
+    {
         res &= o.first - 1 == d.first;
         res &= d.second == o.second - 1 || d.second == o.second + 1;
     }
@@ -611,7 +559,7 @@ bool soloHayReyes(const tablero &t)
 
 bool jugadorEnJaque(const posicion &p)
 {
-    return cualesAtacanAlRey(p).size() > 0;
+    return !cualesAtacanAlRey(p).empty();
 }
 
 vector<coordenada> cualesAtacanAlRey(const posicion &p)
@@ -668,44 +616,6 @@ bool hayMovimientosLegales(const posicion &p)
     return res;
 }
 
-// bool piezasDeJugador(const posicion &p, int jugador, const vector<coordenada> &movibles)
-// {
-//     bool res = true;
-//     for(int i = 0; i < movibles.size(); ++i)
-//     {
-//         res &= movibles[i].second == jugador;
-//     }
-//     return res;
-// }
-//
-// bool tienenMovimiento(const posicion &p, const vector<coordenada> &piezas)
-// {
-//     bool res = true;
-//     for(int i = 0; i < piezas.size(); ++i)
-//     {
-//         res &= puedeMoverse(p, piezas[i]);
-//     }
-// }
-
-// bool puedeMoverse(const posicion &p, coordenada o)
-// {
-//     bool res = false;
-//     // Compruebo si la pieza que está en o puede moverse a alguna casilla contigua
-//     for(int i = -1; i < 1; ++i)
-//     {
-//         for(int j = -1; j < 1; ++j)
-//         {
-//             int o0 = o.first, o1 = o.second;
-//             coordenada d = setCoord(o0 + i, o1 + j);
-//             if(coordenadaEnRango(d))
-//             {
-//                 res |= esCapturaValida(p, o, d) || esMovimientoValido(p, o, d);
-//             }
-//         }
-//     }
-//     return res;
-// }
-
 bool coordenadaEnRango(coordenada c)
 {
     return 0 <= c.first && c.first < ANCHO_TABLERO && 0 <= c.second && c.second < ANCHO_TABLERO;
@@ -713,8 +623,6 @@ bool coordenadaEnRango(coordenada c)
 
 bool esJaqueMate(const posicion &p)
 {
-    bool a = jugadorEnJaque(p);
-    bool b = !existeMovimientoParaSalirDelJaque(p);
     return jugadorEnJaque(p) && !existeMovimientoParaSalirDelJaque(p);
 }
 
@@ -730,7 +638,6 @@ bool existeMovimientoParaSalirDelJaque(const posicion &p)
                 res |= !jugadasDisponibles(p, o).empty();
         }
     }
-    int a = 0;
     return res;
 }
 
@@ -878,8 +785,8 @@ pair<coordenada,coordenada> jugadaForzada(const posicion &p)
     }
     if(cantidadJugadas > 1)
     {
-        coordenada invalida = make_pair(-1,-1);
-        res = make_pair(invalida,invalida);
+        coordenada invalida = make_pair(-1, -1);
+        res = make_pair(invalida, invalida);
     }
     return res;
 }
@@ -925,53 +832,3 @@ void cuantoParaElMate(const posicion &p, int k, int &res)
         }
     }
 }
-
-// Version iterativa
-// int cuantoParaElMate(posicion p)
-// {
-//     int res = 3;
-//     // Piezas del ganador
-//     vector<coordenada> piezas = obtenerPiezas(p, jugador(p));
-//     for(int i = 0; i < piezas.size(); ++i)
-//     {
-//         coordenada o = piezas[i];
-//         vector<coordenada> jugadas = jugadasDisponibles(p, o);
-//         for(int j = 0; j < jugadas.size(); ++j)
-//         {
-//             coordenada d = jugadas[j];
-//             posicion q = p;
-//             ejecutarMovimiento(q, o, d);
-//             pair<coordenada,coordenada> jugadaForzada = posicionForzada(q);
-//             if(esJaqueMate(q))
-//             {
-//                 res = 1;
-//             }
-//             else if(jugadaForzada.first.first != -1 && !esEmpate(q))
-//             {
-//                 ejecutarMovimiento(q, jugadaForzada.first, jugadaForzada.second);
-//                 vector<coordenada> piezas2 = obtenerPiezas(q, jugador(q));
-//                 for(int l = 0; l < piezas2.size(); ++l)
-//                 {
-//                     coordenada o = piezas2[l];
-//                     vector<coordenada> jugadas2 = jugadasDisponibles(q, o);
-//                     for(int m = 0; m < jugadas2.size(); ++m)
-//                     {
-//                         coordenada d = jugadas2[m];
-//                         posicion q2 = q;
-//                         ejecutarMovimiento(q2, o, d);
-//                         pair<coordenada,coordenada> jugadaForzada = posicionForzada(q2);
-//                         if(esJaqueMate(q2))
-//                         {
-//                             res = 2 < res ? 2 : res;
-//                         }
-//                         else if(jugadaForzada.first.first != -1 && !esEmpate(q2))
-//                         {
-//                             ejecutarMovimiento(q2, jugadaForzada.first, jugadaForzada.second);
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     return res;
-// }

@@ -7,9 +7,9 @@
 
 using namespace std;
 // definir aqui las funciones
-pair<int, int> mp(int a, int b);
+pair<int,int> mp(int a, int b);
 void mostrarTableroFeo(const tablero &t);
-vector<pair<int, int>> ordenarVectorPares(vector<pair<int, int>> &v);
+vector<pair<int,int>> ordenarVectorPares(vector<pair<int,int>> &v);
 tablero inicializarTablero();
 coordenada setCoord(int i, int j);
 bool coordenadaEnRango(coordenada c);

@@ -1,12 +1,11 @@
-#include <algorithm>
 #include "ejercicios.h"
+#include <algorithm>
 
 // EJERCICIO 1
-bool posicionValida(pair<tablero, int> const &p)
+bool posicionValida(pair<tablero,int> const &p)
 {
     return esPosicionValida(p);
 }
-
 // EJERCICIO 2
 bool posicionInicial(posicion const &p)
 {
@@ -53,19 +52,14 @@ bool finDeLaPartida(posicion const &p, int &j)
 bool hayJaqueDescubierto(posicion const &p)
 {
     bool res = false;
-    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    vector<coordenada> piezas = obtenerPiezas(p, jugador(p));
+    for(int i = 0; i < piezas.size(); ++i)
     {
-        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        coordenada o = piezas[i];
+        vector<coordenada> jugadas = jugadasDisponibles(p, o);
+        for(int k = 0; k < jugadas.size(); ++k)
         {
-            coordenada o = setCoord(i, j);
-            if(color(p.first, o) == jugador(p))
-            {
-                vector<coordenada> jugadas = jugadasDisponibles(p, o);
-                for(int k = 0; k < jugadas.size(); ++k)
-                {
-                    res |= esJaqueDescubierto(p, o, jugadas[k]);
-                }
-            }
+            res |= esJaqueDescubierto(p, o, jugadas[k]);
         }
     }
     return res;
