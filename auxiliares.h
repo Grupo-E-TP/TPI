@@ -27,7 +27,7 @@ int color(tablero const &t, coordenada c);
 casilla setCasilla(int i, int j);
 bool casillaVacia(tablero const &t, coordenada c);
 vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o);
-
+vector<coordenada> obtenerPosiblesDestinos(const tablero &t, coordenada o);
 
 // Ejercicio 1
 bool esPosicionValida(posicion const &p);

@@ -736,8 +736,22 @@ bool existeMovimientoParaSalirDelJaque(const posicion &p)
 // Se asume que jugador(p) == color(p.first, o)
 vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o)
 {
+    vector<coordenada> jugadasPosibles = obtenerPosiblesDestinos(p.first, o);
     vector<coordenada> res;
-    switch(pieza(p.first, o))
+    for(int i = 0; i < jugadasPosibles.size(); ++i)
+    {
+        coordenada d = jugadasPosibles[i];
+        if(esJugadaLegal(p, o, d))
+            res.push_back(d);
+    }
+    return res;
+}
+
+// Dada una coordenada o con una pieza, devuelve las casillas a las que podría moverse si no hubiese obstáculos
+vector<coordenada> obtenerPosiblesDestinos(const tablero &t, coordenada o)
+{
+    vector<coordenada> res;
+    switch(pieza(t, o))
     {
         case PEON:
             for(int i = -1; i <= 1; i += 2)
@@ -745,7 +759,7 @@ vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o)
                 for(int j = -1; j <= 1; ++j)
                 {
                     coordenada d = setCoord(o.first + i, o.second + j);
-                    if(coordenadaEnRango(d) && esJugadaLegal(p, o, d))
+                    if(coordenadaEnRango(d))
                         res.push_back(d);
                 }
             }
@@ -758,7 +772,7 @@ vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o)
                     for(int j = -1; j <= 1; j += 2)
                     {
                         coordenada d = setCoord(o.first + i * k, o.second + j * k);
-                        if(coordenadaEnRango(d) && esJugadaLegal(p, o, d))
+                        if(coordenadaEnRango(d))
                             res.push_back(d);
                     }
                 }
@@ -768,10 +782,10 @@ vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o)
             for(int i = 0; i < ANCHO_TABLERO; ++i)
             {
                 coordenada d = setCoord(o.first, i);
-                if(coordenadaEnRango(d) && esJugadaLegal(p, o, d))
+                if(coordenadaEnRango(d))
                     res.push_back(d);
                 d = setCoord(i, o.second);
-                if(coordenadaEnRango(d) && esJugadaLegal(p, o, d))
+                if(coordenadaEnRango(d))
                     res.push_back(d);
             }
             break;
@@ -781,7 +795,7 @@ vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o)
                 for(int j = -1; j <= 1; ++j)
                 {
                     coordenada d = setCoord(o.first + i, o.second + j);
-                    if(coordenadaEnRango(d) && esJugadaLegal(p, o, d))
+                    if(coordenadaEnRango(d))
                         res.push_back(d);
                 }
             }
