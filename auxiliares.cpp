@@ -814,7 +814,7 @@ void cuantoParaElMate(const posicion &p, int k, int &res)
     {
         coordenada o = piezas[i];
         vector<coordenada> jugadas = jugadasDisponibles(p, o);
-        for(int j = 0; j < jugadas.size() && k < 3; ++j)
+        for(int j = 0; j < jugadas.size(); ++j)
         {
             coordenada d = jugadas[j];
             posicion q = p;
@@ -824,7 +824,7 @@ void cuantoParaElMate(const posicion &p, int k, int &res)
             {
                 res = k < res ? k : res;
             }
-            else if(forzada.first.first != -1 && !esEmpate(q) && k < 3)
+            else if(forzada.first.first != -1)
             {
                 ejecutarMovimiento(q, forzada.first, forzada.second);
                 cuantoParaElMate(q, k + 1, res);
