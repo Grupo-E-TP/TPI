@@ -15,30 +15,22 @@ bool posicionInicial(posicion const &p)
 // EJERCICIO 3
 vector<coordenada> casillasAtacadas(posicion const &p, int j)
 {
-    vector<coordenada> cA;
-    // completar codigo
-    for(int i = 0; i < ANCHO_TABLERO; i++)
+    vector<coordenada> atacadas;
+    vector<coordenada> piezas = obtenerPiezas(p, j);
+    for(int i = 0; i < piezas.size(); ++i)
     {
-        for(int u = 0; u < ANCHO_TABLERO; u++)
+        coordenada o = piezas[i];
+        vector<coordenada> posibles = obtenerPosiblesDestinos(p.first, o);
+        for(int k = 0; k < posibles.size(); ++k)
         {
-            coordenada o = setCoord(i,u);
-            if(color(p.first,o) == j)
+            coordenada d = posibles[k];
+            if(casillaAtacada(p.first, o, d) && cantidadAparicionesVector(d, atacadas) == 0)
             {
-                for(int k = 0; k < ANCHO_TABLERO; k++)
-                {
-                    for(int l = 0; l < ANCHO_TABLERO; l++)
-                    {
-                        coordenada d = setCoord(k,l);
-                        if(casillaAtacada(p.first,o,d) && cantidadAparicionesVector(d,cA) == 0)
-                        {
-                            cA.push_back(d);
-                        }
-                    }
-                }
+                atacadas.push_back(d);
             }
         }
     }
-    return cA;
+    return atacadas;
 }
 // EJERCICIO 4
 bool posicionSiguienteCorrecta(posicion const &p1, posicion const &p2, coordenada o, coordenada d)
