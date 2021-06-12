@@ -47,7 +47,6 @@ bool finDeLaPartida(posicion const &p, int &j)
 {
     bool empate = esEmpate(p);
     j = empate ? 0 : 3 - p.second;
-    bool mate = esJaqueMate(p);
     return empate || esJaqueMate(p);
 }
 // EJERCICIO 7
@@ -77,15 +76,16 @@ void ejecutarSecuenciaForzada(posicion &p, secuencia s)
     for(int i = 0; i < s.size(); ++i)
     {
         ejecutarMovimiento(p, s[i].first, s[i].second);
-        cambiarJugador(p);
-        ejecutarJugadaForzada(p);
-        cambiarJugador(p);
+        pair<coordenada,coordenada> forzada = jugadaForzada(p);
+        ejecutarMovimiento(p, forzada.first, forzada.second);
     }
 }
 // EJERCICIO 9
 int seVieneElJaqueEn(posicion const &p)
 {
-    int resp = -1;
-    // completar codigo
-    return resp;
+    int res = 3;
+    /* cuantoParaElMate solamente comprueba si hay mate en 1 o 2, si esto no sucede,
+     * gracias a la precondición se puede decir que hay mate en 3. */
+    cuantoParaElMate(p, 1, res);
+    return res;
 }

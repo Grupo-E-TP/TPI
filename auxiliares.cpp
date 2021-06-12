@@ -3,10 +3,10 @@
 
 using namespace std;
 // aqui se pueden ubicar todas las funciones auxiliares de soporte para la resolucion de los ejercicios
-pair<int, int> mp(int a, int b)
-{
-    return make_pair(a, b);
-}
+// pair<int, int> mp(int a, int b)
+// {
+//     return make_pair(a, b);
+// }
 
 // TEST
 vector<pair<int, int>> ordenarVectorPares(vector<pair<int, int>> &v)
@@ -41,201 +41,201 @@ tablero tableroActual(posicion const &p)
     return p.first;
 }
 
-tablero inicializarTablero()
-{
-    vector<casilla> fila(ANCHO_TABLERO, cVACIA);
-    tablero out(ANCHO_TABLERO, fila);
-    return out;
-}
-
-string generarTableroFEN(const tablero &tab)
-{
-    string tableroFEN, fila;
-    int casillasVacias = 0;
-    for(int i = 0; i < tab.size(); ++i)
-    {
-        for(int j = 0; j < tab[0].size(); ++j)
-        {
-            char pieza = 0;
-            casilla c = tab[i][j];
-
-            // Identifica la pieza
-            switch(c.first)
-            {
-                case VACIO:
-                    casillasVacias++;
-                    break;
-                case PEON:
-                    pieza = 'p';
-                    break;
-                case ALFIL:
-                    pieza = 'b';
-                    break;
-                case TORRE:
-                    pieza = 'r';
-                    break;
-                case REY:
-                    pieza = 'k';
-            }
-
-            // Si encuentra una pieza, agrega las casillas vacías previas si las hubiera
-            if((isalpha(pieza) || j == 7) && casillasVacias != 0)
-            {
-                fila += to_string(casillasVacias);
-                casillasVacias = 0;
-            }
-
-            // Si es una pieza blanca, convierte pieza a mayúsculas
-            if(!bool(c.second - 1))
-            {
-                pieza = char(toupper(pieza));
-            }
-
-            // Si encuentra una pieza, la agrega a la fila
-            if(isalpha(pieza))
-            {
-                fila += pieza;
-            }
-            pieza = 0;
-        }
-
-        // Agrega la fila al tablero FEN
-        tableroFEN += !fila.empty() ? fila + "/" : "8/";
-        fila = "";
-        casillasVacias = 0;
-    }
-    return tableroFEN;
-}
-tablero generarTableroFeo(string tableroFEN)
-{
-    char casillaFEN;
-    int casillasLlenas = 0, fila = 0;
-    tablero tabRes(ANCHO_TABLERO);
-    for(int i = 0; casillasLlenas < 64; ++i)
-    {
-        casillaFEN = char(tolower(tableroFEN[i]));
-        int color;
-        casilla c;
-        if(isalpha(casillaFEN))
-        {
-            color = (casillaFEN == tableroFEN[i] ? NEGRO : BLANCO);
-        }
-        switch(casillaFEN)
-        {
-            case 'p':
-                c = (color == BLANCO ? cPEON_B : cPEON_N);
-                tabRes[fila].push_back(c);
-                casillasLlenas++;
-                break;
-            case 'b':
-                c = (color == BLANCO ? cALFIL_B : cALFIL_N);
-                tabRes[fila].push_back(c);
-                casillasLlenas++;
-                break;
-            case 'r':
-                c = (color == BLANCO ? cTORRE_B : cTORRE_N);
-                tabRes[fila].push_back(c);
-                casillasLlenas++;
-                break;
-            case 'k':
-                c = (color == BLANCO ? cREY_B : cREY_N);
-                tabRes[fila].push_back(c);
-                casillasLlenas++;
-                break;
-            case '/':
-                fila++;
-                break;
-            default:
-                casillasLlenas += int(casillaFEN) - 48;
-                for(int j = 0; j < int(casillaFEN) - 48; ++j)
-                {
-                    c = cVACIA;
-                    tabRes[fila].push_back(cVACIA);
-                }
-        }
-    }
-    return tabRes;
-}
-
-void validarConversion(const tablero &t, string tFEN)
-{
-    tablero tF = generarTableroFeo(tFEN);
-    cout << "CONVERSIÓN ENTRE TABLEROS VÁLIDA: " << (t == tF ? "TRUE" : "FALSE") << endl;
-}
-void validarConversion(string tFEN, const tablero &t)
-{
-    bool iguales = true;
-    int barras = 0;
-    string tab = generarTableroFEN(t);
-    for(int i = 0; i < min(tab.size(), tFEN.size()) && barras < 8; ++i)
-    {
-        iguales &= tab[i] == tFEN[i];
-        barras += tab[i + 1] == '/' || tFEN[i + 1] == '/' ? 1 : 0;
-    }
-    cout << "CONVERSIÓN ENTRE TABLEROS VÁLIDA: " << (iguales ? "TRUE" : "FALSE") << endl;
-}
-
-void mostrarTableroFeo(const tablero &t)
-{
-    cout << "tablero t = {" << endl
-         << "\t{";
-    for(int i = 0; i < ANCHO_TABLERO; ++i)
-    {
-        for(int j = 0; j < ANCHO_TABLERO; ++j)
-        {
-            casilla c = t[i][j];
-            switch(c.first)
-            {
-                case 1:
-                    cout << "cPEON_";
-                    break;
-                case 2:
-                    cout << "cALFIL_";
-                    break;
-                case 3:
-                    cout << "cTORRE_";
-                    break;
-                case 4:
-                    cout << "cREY_";
-                    break;
-                default:
-                    cout << "cVACIA";
-            }
-            if(c.second != 0)
-                cout << (c.second == 1 ? "B" : "N");
-            if(j != 7)
-                cout << ",";
-        }
-        if(i != 7)
-            cout << "},\n\t{";
-        else
-            cout << "},\n};\n";
-    }
-}
-void mostrarTableroFEN(const string &tableroFEN)
-{
-    cout << "https://lichess.org/editor/" + tableroFEN << endl;
-}
-
-void tableroLindo(const posicion &p)
-{
-    string tab = generarTableroFEN(p.first);
-    validarConversion(p.first, tab);
-    mostrarTableroFEN(tab);
-}
-void tableroLindo(const tablero &t)
-{
-    string tab = generarTableroFEN(t);
-    validarConversion(t, tab);
-    mostrarTableroFEN(tab);
-}
-
-void tableroFeo(const string &tableroFEN)
-{
-    tablero tab = generarTableroFeo(tableroFEN);
-    validarConversion(tableroFEN, tab);
-    mostrarTableroFeo(tab);
-}
+// tablero inicializarTablero()
+// {
+//     vector<casilla> fila(ANCHO_TABLERO, cVACIA);
+//     tablero out(ANCHO_TABLERO, fila);
+//     return out;
+// }
+//
+// string generarTableroFEN(const tablero &tab)
+// {
+//     string tableroFEN, fila;
+//     int casillasVacias = 0;
+//     for(int i = 0; i < tab.size(); ++i)
+//     {
+//         for(int j = 0; j < tab[0].size(); ++j)
+//         {
+//             char pieza = 0;
+//             casilla c = tab[i][j];
+//
+//             // Identifica la pieza
+//             switch(c.first)
+//             {
+//                 case VACIO:
+//                     casillasVacias++;
+//                     break;
+//                 case PEON:
+//                     pieza = 'p';
+//                     break;
+//                 case ALFIL:
+//                     pieza = 'b';
+//                     break;
+//                 case TORRE:
+//                     pieza = 'r';
+//                     break;
+//                 case REY:
+//                     pieza = 'k';
+//             }
+//
+//             // Si encuentra una pieza, agrega las casillas vacías previas si las hubiera
+//             if((isalpha(pieza) || j == 7) && casillasVacias != 0)
+//             {
+//                 fila += to_string(casillasVacias);
+//                 casillasVacias = 0;
+//             }
+//
+//             // Si es una pieza blanca, convierte pieza a mayúsculas
+//             if(!bool(c.second - 1))
+//             {
+//                 pieza = char(toupper(pieza));
+//             }
+//
+//             // Si encuentra una pieza, la agrega a la fila
+//             if(isalpha(pieza))
+//             {
+//                 fila += pieza;
+//             }
+//             pieza = 0;
+//         }
+//
+//         // Agrega la fila al tablero FEN
+//         tableroFEN += !fila.empty() ? fila + "/" : "8/";
+//         fila = "";
+//         casillasVacias = 0;
+//     }
+//     return tableroFEN;
+// }
+// tablero generarTableroFeo(string tableroFEN)
+// {
+//     char casillaFEN;
+//     int casillasLlenas = 0, fila = 0;
+//     tablero tabRes(ANCHO_TABLERO);
+//     for(int i = 0; casillasLlenas < 64; ++i)
+//     {
+//         casillaFEN = char(tolower(tableroFEN[i]));
+//         int color;
+//         casilla c;
+//         if(isalpha(casillaFEN))
+//         {
+//             color = (casillaFEN == tableroFEN[i] ? NEGRO : BLANCO);
+//         }
+//         switch(casillaFEN)
+//         {
+//             case 'p':
+//                 c = (color == BLANCO ? cPEON_B : cPEON_N);
+//                 tabRes[fila].push_back(c);
+//                 casillasLlenas++;
+//                 break;
+//             case 'b':
+//                 c = (color == BLANCO ? cALFIL_B : cALFIL_N);
+//                 tabRes[fila].push_back(c);
+//                 casillasLlenas++;
+//                 break;
+//             case 'r':
+//                 c = (color == BLANCO ? cTORRE_B : cTORRE_N);
+//                 tabRes[fila].push_back(c);
+//                 casillasLlenas++;
+//                 break;
+//             case 'k':
+//                 c = (color == BLANCO ? cREY_B : cREY_N);
+//                 tabRes[fila].push_back(c);
+//                 casillasLlenas++;
+//                 break;
+//             case '/':
+//                 fila++;
+//                 break;
+//             default:
+//                 casillasLlenas += int(casillaFEN) - 48;
+//                 for(int j = 0; j < int(casillaFEN) - 48; ++j)
+//                 {
+//                     c = cVACIA;
+//                     tabRes[fila].push_back(cVACIA);
+//                 }
+//         }
+//     }
+//     return tabRes;
+// }
+//
+// void validarConversion(const tablero &t, string tFEN)
+// {
+//     tablero tF = generarTableroFeo(tFEN);
+//     cout << "CONVERSIÓN ENTRE TABLEROS VÁLIDA: " << (t == tF ? "TRUE" : "FALSE") << endl;
+// }
+// void validarConversion(string tFEN, const tablero &t)
+// {
+//     bool iguales = true;
+//     int barras = 0;
+//     string tab = generarTableroFEN(t);
+//     for(int i = 0; i < min(tab.size(), tFEN.size()) && barras < 8; ++i)
+//     {
+//         iguales &= tab[i] == tFEN[i];
+//         barras += tab[i + 1] == '/' || tFEN[i + 1] == '/' ? 1 : 0;
+//     }
+//     cout << "CONVERSIÓN ENTRE TABLEROS VÁLIDA: " << (iguales ? "TRUE" : "FALSE") << endl;
+// }
+//
+// void mostrarTableroFeo(const tablero &t)
+// {
+//     cout << "tablero t = {" << endl
+//          << "\t{";
+//     for(int i = 0; i < ANCHO_TABLERO; ++i)
+//     {
+//         for(int j = 0; j < ANCHO_TABLERO; ++j)
+//         {
+//             casilla c = t[i][j];
+//             switch(c.first)
+//             {
+//                 case 1:
+//                     cout << "cPEON_";
+//                     break;
+//                 case 2:
+//                     cout << "cALFIL_";
+//                     break;
+//                 case 3:
+//                     cout << "cTORRE_";
+//                     break;
+//                 case 4:
+//                     cout << "cREY_";
+//                     break;
+//                 default:
+//                     cout << "cVACIA";
+//             }
+//             if(c.second != 0)
+//                 cout << (c.second == 1 ? "B" : "N");
+//             if(j != 7)
+//                 cout << ",";
+//         }
+//         if(i != 7)
+//             cout << "},\n\t{";
+//         else
+//             cout << "},\n};\n";
+//     }
+// }
+// void mostrarTableroFEN(const string &tableroFEN)
+// {
+//     cout << "https://lichess.org/editor/" + tableroFEN << endl;
+// }
+//
+// void tableroLindo(const posicion &p)
+// {
+//     string tab = generarTableroFEN(p.first);
+//     validarConversion(p.first, tab);
+//     mostrarTableroFEN(tab);
+// }
+// void tableroLindo(const tablero &t)
+// {
+//     string tab = generarTableroFEN(t);
+//     validarConversion(t, tab);
+//     mostrarTableroFEN(tab);
+// }
+//
+// void tableroFeo(const string &tableroFEN)
+// {
+//     tablero tab = generarTableroFeo(tableroFEN);
+//     validarConversion(tableroFEN, tab);
+//     mostrarTableroFeo(tab);
+// }
 
 // Ejercicio 1
 bool esPosicionValida(posicion const &p)
@@ -485,34 +485,34 @@ bool esCapturaValida(const posicion &p, coordenada o, coordenada d)
 }
 // Probablemente pueda hacerse mas corto?
 // Igualmente no se si la vamos a usar.
-bool sonCasillasAtacadas(const tablero &t, int jugador, vector<coordenada> &atacadas)
-{
-    bool res = true;
-    for(int i = 0; i < ANCHO_TABLERO; i++)
-    {
-        for(int j = 0; j < ANCHO_TABLERO; j++)
-        {
-            coordenada c = setCoord(i,j);
-            if (cantidadAparicionesVector(c,atacadas) == 1)
-            {
-                int laAtacan = 0;
-                for(int k = 0; k < ANCHO_TABLERO; k++)
-                {
-                    for(int l = 0; l < ANCHO_TABLERO; l++)
-                    {
-                        coordenada o = setCoord(k,l);
-                        if(o != c && color(t,o) == jugador && casillaAtacada(t,o,c))
-                        {
-                            laAtacan++;
-                        }
-                    }
-                }
-                res = laAtacan > 0;
-            }
-        }
-    }
-    return res;
-}
+// bool sonCasillasAtacadas(const tablero &t, int jugador, vector<coordenada> &atacadas)
+// {
+//     bool res = true;
+//     for(int i = 0; i < ANCHO_TABLERO; i++)
+//     {
+//         for(int j = 0; j < ANCHO_TABLERO; j++)
+//         {
+//             coordenada c = setCoord(i,j);
+//             if (cantidadAparicionesVector(c,atacadas) == 1)
+//             {
+//                 int laAtacan = 0;
+//                 for(int k = 0; k < ANCHO_TABLERO; k++)
+//                 {
+//                     for(int l = 0; l < ANCHO_TABLERO; l++)
+//                     {
+//                         coordenada o = setCoord(k,l);
+//                         if(o != c && color(t,o) == jugador && casillaAtacada(t,o,c))
+//                         {
+//                             laAtacan++;
+//                         }
+//                     }
+//                 }
+//                 res = laAtacan > 0;
+//             }
+//         }
+//     }
+//     return res;
+// }
 
 int cantidadAparicionesVector(coordenada c, vector<coordenada> v)
 {
@@ -713,6 +713,8 @@ bool coordenadaEnRango(coordenada c)
 
 bool esJaqueMate(const posicion &p)
 {
+    bool a = jugadorEnJaque(p);
+    bool b = !existeMovimientoParaSalirDelJaque(p);
     return jugadorEnJaque(p) && !existeMovimientoParaSalirDelJaque(p);
 }
 
@@ -811,6 +813,7 @@ bool esJugadaLegal(const posicion &p, coordenada o, coordenada d)
 bool loPoneEnJaque(posicion p, coordenada o, coordenada d)
 {
     ejecutarMovimiento(p, o, d);
+    cambiarJugador(p);
     return jugadorEnJaque(p);
 }
 
@@ -828,6 +831,7 @@ void ejecutarMovimiento(posicion &p, coordenada o, coordenada d)
         p.first[o.first][o.second] = cVACIA;
         p.first[d.first][d.second] = tmp;
     }
+    cambiarJugador(p);
 }
 
 casilla obtenerCasilla(const tablero &t, coordenada o)
@@ -840,28 +844,10 @@ void cambiarJugador(posicion &p)
     p.second = contrincante(jugador(p));
 }
 
-void ejecutarJugadaForzada(posicion &p)
-{
-    for(int i = 0; i < ANCHO_TABLERO; ++i)
-    {
-        for(int j = 0; j < ANCHO_TABLERO; ++j)
-        {
-            coordenada o = setCoord(i, j);
-            if(color(p.first, o) == jugador(p))
-            {
-                vector<coordenada> jugadasLegales = jugadasDisponibles(p, o);
-                if(!jugadasLegales.empty())
-                    ejecutarMovimiento(p, o, jugadasLegales[0]);
-            }
-        }
-    }
-}
-
 bool esJaqueDescubierto(posicion p, coordenada o, coordenada d)
 {
     bool res = false;
     ejecutarMovimiento(p, o, d);
-    cambiarJugador(p);
     coordenada rey = dondeEstaElRey(p.first, jugador(p));
     vector<coordenada> regicidas = cualesAtacanAlRey(p);
     for(int i = 0; i < regicidas.size(); ++i)
@@ -870,3 +856,122 @@ bool esJaqueDescubierto(posicion p, coordenada o, coordenada d)
     }
     return res;
 }
+
+// Si el jugador tiene un solo movimiento, devuelve las coordenadas de origen y destino de la jugada
+pair<coordenada,coordenada> jugadaForzada(const posicion &p)
+{
+    int cantidadJugadas = 0;
+    pair<coordenada,coordenada> res;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int j = 0; j < ANCHO_TABLERO; ++j)
+        {
+            coordenada o = setCoord(i, j);
+            vector<coordenada> jugadas = jugadasDisponibles(p, o);
+            if(color(p.first, o) == jugador(p) && int(jugadas.size()) > 0)
+            {
+                cantidadJugadas += int(jugadas.size());
+                res.first = o;
+                res.second = jugadas[0];
+            }
+        }
+    }
+    if(cantidadJugadas > 1)
+    {
+        coordenada invalida = make_pair(-1,-1);
+        res = make_pair(invalida,invalida);
+    }
+    return res;
+}
+
+vector<coordenada> obtenerPiezas(const posicion &p, int j)
+{
+    vector<coordenada> res;
+    for(int i = 0; i < ANCHO_TABLERO; ++i)
+    {
+        for(int k = 0; k < ANCHO_TABLERO; ++k)
+        {
+            coordenada o = setCoord(i, k);
+            if(color(p.first, o) == j)
+                res.push_back(o);
+        }
+    }
+    return res;
+}
+
+void cuantoParaElMate(const posicion &p, int k, int &res)
+{
+    // Piezas del ganador
+    vector<coordenada> piezas = obtenerPiezas(p, jugador(p));
+    for(int i = 0; i < piezas.size() && k < 3; ++i)
+    {
+        coordenada o = piezas[i];
+        vector<coordenada> jugadas = jugadasDisponibles(p, o);
+        for(int j = 0; j < jugadas.size() && k < 3; ++j)
+        {
+            coordenada d = jugadas[j];
+            posicion q = p;
+            ejecutarMovimiento(q, o, d);
+            pair<coordenada,coordenada> forzada = jugadaForzada(q);
+            if(esJaqueMate(q))
+            {
+                res = k < res ? k : res;
+            }
+            else if(forzada.first.first != -1 && !esEmpate(q) && k < 3)
+            {
+                ejecutarMovimiento(q, forzada.first, forzada.second);
+                cuantoParaElMate(q, k + 1, res);
+            }
+        }
+    }
+}
+
+// Version iterativa
+// int cuantoParaElMate(posicion p)
+// {
+//     int res = 3;
+//     // Piezas del ganador
+//     vector<coordenada> piezas = obtenerPiezas(p, jugador(p));
+//     for(int i = 0; i < piezas.size(); ++i)
+//     {
+//         coordenada o = piezas[i];
+//         vector<coordenada> jugadas = jugadasDisponibles(p, o);
+//         for(int j = 0; j < jugadas.size(); ++j)
+//         {
+//             coordenada d = jugadas[j];
+//             posicion q = p;
+//             ejecutarMovimiento(q, o, d);
+//             pair<coordenada,coordenada> jugadaForzada = posicionForzada(q);
+//             if(esJaqueMate(q))
+//             {
+//                 res = 1;
+//             }
+//             else if(jugadaForzada.first.first != -1 && !esEmpate(q))
+//             {
+//                 ejecutarMovimiento(q, jugadaForzada.first, jugadaForzada.second);
+//                 vector<coordenada> piezas2 = obtenerPiezas(q, jugador(q));
+//                 for(int l = 0; l < piezas2.size(); ++l)
+//                 {
+//                     coordenada o = piezas2[l];
+//                     vector<coordenada> jugadas2 = jugadasDisponibles(q, o);
+//                     for(int m = 0; m < jugadas2.size(); ++m)
+//                     {
+//                         coordenada d = jugadas2[m];
+//                         posicion q2 = q;
+//                         ejecutarMovimiento(q2, o, d);
+//                         pair<coordenada,coordenada> jugadaForzada = posicionForzada(q2);
+//                         if(esJaqueMate(q2))
+//                         {
+//                             res = 2 < res ? 2 : res;
+//                         }
+//                         else if(jugadaForzada.first.first != -1 && !esEmpate(q2))
+//                         {
+//                             ejecutarMovimiento(q2, jugadaForzada.first, jugadaForzada.second);
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     return res;
+// }

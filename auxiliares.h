@@ -87,5 +87,9 @@ bool esJaqueDescubierto(posicion p, coordenada o, coordenada d);
 void cambiarJugador(posicion &p);
 void ejecutarJugadaForzada(posicion &p);
 
+// Ejercicio 9
+pair<coordenada,coordenada> jugadaForzada(const posicion &p);
+void cuantoParaElMate(const posicion &p, int k, int &res);
+vector<coordenada> obtenerPiezas(const posicion &p, int j);
 
 #endif //AJEDREZLITE_AUXILIARES_H
