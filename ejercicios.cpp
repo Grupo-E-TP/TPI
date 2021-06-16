@@ -77,9 +77,7 @@ void ejecutarSecuenciaForzada(posicion &p, secuencia s)
 // EJERCICIO 9
 int seVieneElJaqueEn(posicion const &p)
 {
-    int res = 3;
-    /* cuantoParaElMate solamente comprueba si hay mate en 1 o 2, si esto no sucede,
-     * gracias a la precondición se puede decir que hay mate en 3. */
-    cuantoParaElMate(p, 1, res);
+    int res = 3, k = 1;
+    cuantoParaElMate(p, k, res);
     return res;
 }
