@@ -4,7 +4,7 @@
 // EJERCICIO 1
 bool posicionValida(pair<tablero,int> const &p)
 {
-    return esPosicionValida(p);
+    return esJugadorValido(jugador(p)) && esTableroValido(tableroActual(p));
 }
 // EJERCICIO 2
 bool posicionInicial(posicion const &p)
@@ -45,7 +45,7 @@ void ordenarTablero(posicion &p)
 bool finDeLaPartida(posicion const &p, int &j)
 {
     bool empate = esEmpate(p);
-    j = empate ? 0 : 3 - p.second;
+    j = empate ? 0 : contrincante(p.second);
     return empate || esJaqueMate(p);
 }
 // EJERCICIO 7

@@ -223,11 +223,6 @@ tablero tableroActual(posicion const &p)
 // }
 
 // Ejercicio 1
-bool esPosicionValida(posicion const &p)
-{
-    return esJugadorValido(jugador(p)) && esTableroValido(tableroActual(p));
-}
-
 bool esJugadorValido(int const j)
 {
     return j == BLANCO || j == NEGRO;
@@ -763,7 +758,7 @@ bool esJaqueDescubierto(posicion p, coordenada o, coordenada d)
     return res;
 }
 
-// Si el jugador tiene un solo movimiento, devuelve las coordenadas de origen y destino de la jugada
+// Si el jugador tiene un solo movimiento, devuelve las coordenadas de origen y destino de esa jugada
 pair<coordenada,coordenada> jugadaForzada(const posicion &p)
 {
     int cantidadJugadas = 0;
@@ -807,7 +802,6 @@ vector<coordenada> obtenerPiezas(const posicion &p, int j)
 
 void cuantoParaElMate(const posicion &p, int k, int &res)
 {
-    // Piezas del ganador
     vector<coordenada> piezas = obtenerPiezas(p, jugador(p));
     for(int i = 0; i < piezas.size() && k < res; ++i)
     {
@@ -821,7 +815,7 @@ void cuantoParaElMate(const posicion &p, int k, int &res)
             pair<coordenada,coordenada> forzada = jugadaForzada(q);
             if(esJaqueMate(q))
             {
-                res = k < res ? k : res;
+                res = k;
             }
             else if(forzada.first.first != -1)
             {
