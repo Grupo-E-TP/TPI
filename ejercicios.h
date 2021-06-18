@@ -2,6 +2,7 @@
 #define EJERCICIOS_H
 
 #include "definiciones.h"
+#include "auxiliares.h"
 
 bool posicionValida(pair<tablero, int> const &p);
 bool posicionInicial(posicion const &p);

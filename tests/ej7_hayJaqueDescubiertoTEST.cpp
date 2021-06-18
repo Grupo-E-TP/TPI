@@ -56,3 +56,20 @@ TEST(hayJaqueDescubiertoTEST, jaqueDescubierto)
 
     EXPECT_TRUE(hayJaqueDescubierto(p));
 }
+
+TEST(hayJaqueDescubiertoTEST, contraJaque)
+{
+    tablero t = {
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cPEON_N,cVACIA,cVACIA,cVACIA,cVACIA,cPEON_N,cPEON_N},
+            {cPEON_N,cVACIA,cVACIA,cVACIA,cVACIA,cREY_N,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cALFIL_N,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cTORRE_B,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cPEON_B,cREY_B,cALFIL_B,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cPEON_B,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cTORRE_N},
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+    };
+    posicion p = make_pair(t, BLANCO);
+
+    EXPECT_TRUE(hayJaqueDescubierto(p));
+}
