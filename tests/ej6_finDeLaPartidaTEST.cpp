@@ -44,3 +44,41 @@ TEST(finDeLaPartidaTEST, jaqueMate)
     EXPECT_TRUE(finDeLaPartida(p, j));
     EXPECT_EQ(j, BLANCO);
 }
+
+TEST(finDeLaPartidaTEST, empate)
+{
+    tablero t = {
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cTORRE_N,cVACIA,cTORRE_N,cVACIA,cVACIA,cVACIA},
+            {cTORRE_N,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cREY_B,cVACIA,cVACIA,cREY_N,cVACIA},
+            {cTORRE_N,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+    };
+    posicion p = make_pair(t, BLANCO);
+    int j;
+
+    EXPECT_TRUE(finDeLaPartida(p, j));
+    EXPECT_EQ(j, 0);
+}
+
+TEST(finDeLaPartidaTEST, empate2)
+{
+    tablero t = {
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cPEON_N},
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cREY_B},
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cALFIL_N,cALFIL_N,cVACIA,cREY_N,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+            {cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA,cVACIA},
+    };
+    posicion p = make_pair(t, BLANCO);
+    int j;
+
+    EXPECT_TRUE(finDeLaPartida(p, j));
+    EXPECT_EQ(j, 0);
+}
