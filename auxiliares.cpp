@@ -33,7 +33,6 @@ tablero tableroActual(posicion const &p)
     return p.first;
 }
 
-// Ejercicio 1
 bool esJugadorValido(int const j)
 {
     return j == BLANCO || j == NEGRO;
@@ -228,7 +227,6 @@ bool movimientoPiezaValido(tablero const &t, coordenada o, coordenada d)
     return res;
 }
 
-// Ejercicio 4
 bool posicionSiguiente(posicion const &p, posicion const &q, coordenada o, coordenada d)
 {
     bool res = posicionesIgualesExceptoEn(p, q, o, d) && casillaVacia(q.first, o);
@@ -318,7 +316,6 @@ bool enLineaFinalInicial(coordenada d)
     return d.first == 0 || d.first == ANCHO_TABLERO - 1;
 }
 
-// Ejercicio 5
 void ordenarFilas(tablero &t)
 {
     for(int i = 0; i < ANCHO_TABLERO; ++i)
@@ -343,7 +340,6 @@ void ordenarFilas(tablero &t)
     }
 }
 
-// Ejercicio 6
 bool esEmpate(const posicion &p)
 {
     return soloHayReyes(p.first) || (!jugadorEnJaque(p) && !hayMovimientosLegales(p));
