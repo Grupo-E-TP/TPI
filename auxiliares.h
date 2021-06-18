@@ -16,18 +16,12 @@ int jugador(posicion const &p);
 int contrincante(int j);
 int pieza(tablero const &t, coordenada c);
 int color(tablero const &t, coordenada c);
-
-void tableroLindo(const posicion &p);
-void tableroLindo(const tablero &t);
-void tableroFeo(const string &tableroFEN);
-
 casilla setCasilla(int i, int j);
 bool casillaVacia(tablero const &t, coordenada c);
 vector<coordenada> jugadasDisponibles(const posicion &p, coordenada o);
 vector<coordenada> obtenerPosiblesDestinos(const tablero &t, coordenada o);
 
 // Ejercicio 1
-bool esPosicionValida(posicion const &p);
 bool esJugadorValido(int j);
 bool esTableroValido(const tablero &t);
 bool esMatriz(tablero t);
