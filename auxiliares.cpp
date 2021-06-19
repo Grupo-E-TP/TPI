@@ -151,7 +151,6 @@ bool piezasEnCoordenadas(tablero const &t)
     res &= piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, 0), TORRE, BLANCO);
     res &= piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, ANCHO_TABLERO - 1), TORRE, BLANCO);
 
-
     // Reyes
     res &= piezaEnCoordenada(t, setCoord(0, 4), REY, NEGRO);
     res &= piezaEnCoordenada(t, setCoord(ANCHO_TABLERO - 1, 4), REY, BLANCO);
