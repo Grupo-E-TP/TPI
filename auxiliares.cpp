@@ -91,8 +91,8 @@ bool cantidadValidaDePiezas(const tablero &t)
     res &= aparicionesEnTablero(t, cALFIL_N) <= 2;
 
     // Torres
-    res &= aparicionesEnTablero(t, cPEON_B) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_B));
-    res &= aparicionesEnTablero(t, cPEON_N) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_N));
+    res &= aparicionesEnTablero(t, cTORRE_B) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_B));
+    res &= aparicionesEnTablero(t, cTORRE_N) <= 2 + (ANCHO_TABLERO - aparicionesEnTablero(t, cPEON_N));
 
     // Reyes
     res &= aparicionesEnTablero(t, cREY_B) == 1;
