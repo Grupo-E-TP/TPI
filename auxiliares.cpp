@@ -469,7 +469,7 @@ vector<coordenada> obtenerPosiblesDestinos(const tablero &t, coordenada o)
                 for(int j = -1; j <= 1; ++j)
                 {
                     coordenada d = setCoord(o.first + i, o.second + j);
-                    if(coordenadaEnRango(d))
+                    if(coordenadaEnRango(d) && o != d)
                         res.push_back(d);
                 }
             }
@@ -482,7 +482,7 @@ vector<coordenada> obtenerPosiblesDestinos(const tablero &t, coordenada o)
                     for(int j = -1; j <= 1; j += 2)
                     {
                         coordenada d = setCoord(o.first + i * k, o.second + j * k);
-                        if(coordenadaEnRango(d))
+                        if(coordenadaEnRango(d) && o != d)
                             res.push_back(d);
                     }
                 }
@@ -492,10 +492,10 @@ vector<coordenada> obtenerPosiblesDestinos(const tablero &t, coordenada o)
             for(int i = 0; i < ANCHO_TABLERO; ++i)
             {
                 coordenada d = setCoord(o.first, i);
-                if(coordenadaEnRango(d))
+                if(coordenadaEnRango(d) && o != d)
                     res.push_back(d);
                 d = setCoord(i, o.second);
-                if(coordenadaEnRango(d))
+                if(coordenadaEnRango(d) && o != d)
                     res.push_back(d);
             }
             break;
@@ -505,7 +505,7 @@ vector<coordenada> obtenerPosiblesDestinos(const tablero &t, coordenada o)
                 for(int j = -1; j <= 1; ++j)
                 {
                     coordenada d = setCoord(o.first + i, o.second + j);
-                    if(coordenadaEnRango(d))
+                    if(coordenadaEnRango(d) && o != d)
                         res.push_back(d);
                 }
             }

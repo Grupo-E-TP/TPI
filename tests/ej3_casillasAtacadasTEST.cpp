@@ -56,3 +56,28 @@ TEST(casillasAtacadasTEST, atacadasDelContrincante)
     vector<coordenada> atacadas = casillasAtacadas(p, j);
     EXPECT_EQ(ordenarVectorPares(esperado), ordenarVectorPares(atacadas));
 }
+
+TEST(casillasAtacadasTEST, atacadasTorre)
+{
+    tablero t = {
+            {cVACIA, cVACIA, cREY_N, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cTORRE_B, cVACIA, cREY_B, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+    };
+    posicion p = make_pair(t, BLANCO);
+    vector<coordenada> esperado = {
+            make_pair(0,2),make_pair(1,2),make_pair(2,2),make_pair(3,2),make_pair(4,2),
+            make_pair(5,2),make_pair(7,2),make_pair(6,0),make_pair(6,1),
+            make_pair(6,3),make_pair(6,4),
+            make_pair(5,3),make_pair(5,4),make_pair(5,5),
+            make_pair(6,5),
+            make_pair(7,3),make_pair(7,4),make_pair(7,5)
+    };
+    vector<coordenada> atacadas = casillasAtacadas(p, BLANCO);
+    EXPECT_EQ(ordenarVectorPares(esperado), ordenarVectorPares(atacadas));
+}
