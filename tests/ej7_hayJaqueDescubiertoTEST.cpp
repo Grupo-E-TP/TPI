@@ -56,3 +56,20 @@ TEST(hayJaqueDescubiertoTEST, jaqueDescubierto)
 
     EXPECT_TRUE(hayJaqueDescubierto(p));
 }
+
+TEST(hayJaqueDescubiertoTEST, hayJaquePeroNoDescubierto)
+{
+    tablero t = { // Cuarto tablero de la Figura 5 del enunciado del TPE, con colores opuestos.
+            {cTORRE_N, cVACIA, cVACIA, cVACIA, cREY_N, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cTORRE_N, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cPEON_N, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cPEON_N, cVACIA, cVACIA},
+            {cREY_B, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
+    };
+    posicion p = make_pair(t, NEGRO);
+    tableroLindo(p);
+    EXPECT_FALSE(hayJaqueDescubierto(p));
+}
