@@ -70,8 +70,7 @@ TEST(hayJaqueDescubiertoTEST, hayJaquePeroNoDescubierto)
             {cREY_B, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
     };
     posicion p = make_pair(t, NEGRO);
-    tableroLindo(p);
-    EXPECT_FALSE(hayJaqueDescubierto(p);
+    EXPECT_TRUE(hayJaqueDescubierto(p));
 }
 
 TEST(hayJaqueDescubiertoTEST, hayJaquePeroNoEsMate)
@@ -87,6 +86,5 @@ TEST(hayJaqueDescubiertoTEST, hayJaquePeroNoEsMate)
             {cTORRE_B, cVACIA, cALFIL_B, cVACIA, cREY_B, cALFIL_B, cVACIA, cVACIA},
     };
     posicion p = make_pair(t, BLANCO);
-    tableroLindo(p);
-    EXPECT_FALSE(hayJaqueDescubierto(p));
+    EXPECT_TRUE(hayJaqueDescubierto(p));
 }

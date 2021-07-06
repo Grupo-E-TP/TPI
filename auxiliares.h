@@ -7,10 +7,6 @@
 
 using namespace std;
 
-void tableroLindo(const posicion &p);
-void tableroLindo(const tablero &t);
-void tableroFeo(const string &tableroFEN);
-
 vector<pair<int,int>> ordenarVectorPares(vector<pair<int,int>> &v);
 coordenada setCoord(int i, int j);
 bool coordenadaEnRango(coordenada c);

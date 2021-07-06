@@ -39,23 +39,3 @@ TEST(ejecutarSecuenciaForzadaTEST, secuenciaForzada)
     ejecutarSecuenciaForzada(p, s);
     EXPECT_EQ(p_fin, p);
 }
-
-TEST(ejecutarSecuenciaForzadaTEST, secuenciaForzadaConCoronacionForzada) {
-    tablero t = {
-            {cVACIA, cVACIA, cALFIL_N, cVACIA, cVACIA, cVACIA, cTORRE_N, cVACIA},
-            {cREY_N, cVACIA, cVACIA, cVACIA, cPEON_B, cVACIA, cVACIA, cVACIA},
-            {cVACIA, cVACIA, cVACIA, cALFIL_N, cVACIA, cVACIA, cVACIA, cVACIA},
-            {cVACIA, cVACIA, cVACIA, cVACIA, cTORRE_N, cVACIA, cVACIA, cVACIA},
-            {cREY_B, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
-            {cPEON_N, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA},
-            {cVACIA, cPEON_N, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cTORRE_N},
-            {cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cVACIA, cTORRE_N, cVACIA},
-    };
-    posicion p = make_pair(t, NEGRO);
-    secuencia s = {
-            make_pair(make_pair(0,6),make_pair(4,6)), make_pair(make_pair(7,6),make_pair(7,0)),
-            make_pair(make_pair(0,2),make_pair(2,4))
-    };
-    ejecutarSecuenciaForzada(p, s);
-    EXPECT_EQ(p, p);
-}
