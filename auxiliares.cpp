@@ -748,7 +748,7 @@ bool esJaqueDescubierto(posicion p, coordenada o, coordenada d)
     vector<coordenada> regicidas = cualesAtacanAlRey(p);
     for(int i = 0; i < regicidas.size(); ++i)
     {
-        res |= jugadorEnJaque(p) && atacaAlRey(p, regicidas[i]) && regicidas[i] != d;
+        res |= jugadorEnJaque(p) && atacaAlRey(p, regicidas[i]);
     }
     return res;
 }
